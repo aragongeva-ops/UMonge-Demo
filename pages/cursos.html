@@ -1,0 +1,456 @@
+
+<style>
+.courses-page {
+    color: var(--text, var(--text));
+    width: 100%;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.courses-page * {
+    box-sizing: border-box;
+}
+
+.courses-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.courses-eyebrow {
+    color: #ef2b2b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+}
+
+.courses-header h1 {
+    font-size: 28px;
+    margin: 8px 0;
+    font-weight: 800;
+}
+
+.courses-header p {
+    color: var(--muted, var(--muted));
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.courses-date {
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    border-radius: 12px;
+    padding: 11px 15px;
+    color: var(--muted, var(--muted));
+    font-size: 12px;
+}
+
+.courses-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 27px;
+}
+
+.course-stat {
+    background: linear-gradient(145deg, var(--stat3-from,rgba(34,34,37,.85)), var(--stat3-to,rgba(17,17,20,.9)));
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 19px;
+    min-height: 112px;
+}
+
+.course-stat span {
+    display: block;
+    color: #c6c6c9;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.course-stat strong {
+    font-size: 27px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.course-stat small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.courses-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 28px 0 15px;
+}
+
+.courses-section-title h2 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 750;
+}
+
+.courses-section-title p {
+    font-size: 12px;
+    color: var(--muted, var(--muted));
+    margin: 5px 0 0;
+}
+
+.courses-tools {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 17px;
+}
+
+.courses-search {
+    flex: 1;
+    min-width: 220px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: inherit;
+    outline: none;
+    font-size: 12px;
+}
+
+.courses-search:focus {
+    border-color: #d90000;
+}
+
+.courses-search::placeholder {
+    color: #9a9a9d;
+}
+
+.course-filters {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    border: 1px solid var(--border);
+    color: #cfcfd2;
+    background: rgba(255,255,255,.04);
+    border-radius: 9px;
+    padding: 10px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.filter-chip:hover,
+.filter-chip.active {
+    background: #b5121b;
+    border-color: #d90000;
+    color: white;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.course-card {
+    background: linear-gradient(145deg, rgba(26,26,29,.88), rgba(14,14,17,.95));
+    border: 1px solid rgba(255,255,255,.11);
+    border-radius: 16px;
+    padding: 20px;
+    transition: transform .2s, border-color .2s;
+    min-width: 0;
+}
+
+.course-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(239,43,43,.55);
+}
+
+.course-card[hidden] {
+    display: none !important;
+}
+
+.course-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 17px;
+}
+
+.course-symbol {
+    width: 43px;
+    height: 43px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(217,0,0,.17);
+    border: 1px solid rgba(239,43,43,.25);
+    color: #ff5555;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.course-status {
+    font-size: 10px;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-progress {
+    color: #ffb8b8;
+    background: rgba(217,0,0,.18);
+    border: 1px solid rgba(217,0,0,.3);
+}
+
+.status-pending {
+    color: #e5d4d5;
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--border);
+}
+
+.status-complete {
+    color: #bce8c9;
+    background: rgba(55,150,85,.13);
+    border: 1px solid rgba(55,150,85,.25);
+}
+
+.course-category {
+    color: #ff6969;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.course-card h3 {
+    font-size: 16px;
+    margin: 0 0 8px;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.course-description {
+    color: #bdbdc0;
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0 0 18px;
+    min-height: 39px;
+}
+
+.course-progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #cdcdd0;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.course-progress-info strong {
+    color: var(--text);
+}
+
+.course-progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,.10);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.course-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #b5121b, #ef2b2b);
+    border-radius: 20px;
+}
+
+.course-footer {
+    border-top: 1px solid var(--border);
+    margin-top: 17px;
+    padding-top: 13px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: #bdbdc0;
+    font-size: 11px;
+}
+
+.course-footer strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.courses-empty {
+    display: none;
+    text-align: center;
+    padding: 35px 15px;
+    color: #bdbdc0;
+    font-size: 13px;
+    border: 1px dashed rgba(255,255,255,.16);
+    border-radius: 14px;
+    margin-top: 15px;
+}
+
+.courses-note {
+    margin-top: 22px;
+    border: 1px solid rgba(239,43,43,.2);
+    background: rgba(217,0,0,.07);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #cdcdd0;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.courses-note strong {
+    color: #ff7777;
+}
+
+@media (max-width: 900px) {
+    .courses-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .courses-header h1 {
+        font-size: 23px;
+    }
+
+    .course-filters {
+        width: 100%;
+    }
+
+    .filter-chip {
+        flex: 1;
+    }
+}
+
+/* Filtros del catálogo real */
+.course-filters select.courses-search { width: auto; min-width: 170px; cursor: pointer; }
+.courses-more { display: block; margin: 22px auto 0; padding: 12px 26px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 12px; font-weight: 700; }
+.courses-more:hover { border-color: #ef2b2b; }
+.course-meta { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; font-size: 11px;
+    border-top: 1px solid var(--border); }
+.course-meta span { color: var(--muted); }
+.course-meta strong { text-align: right; }
+.courses-count { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
+.course-card { cursor: pointer; }
+.course-card:hover { border-color: #ef2b2b !important; }
+.cc-bar { height: 5px; border-radius: 4px; background: rgba(255,255,255,.14); margin-top: 10px; overflow: hidden; }
+.cc-bar i { display: block; height: 100%; background: linear-gradient(90deg,#b5121b,#ff6b6b); }
+</style>
+
+<section class="courses-page" id="coursesCatalog">
+
+    <div class="courses-header">
+        <div>
+            <span class="courses-eyebrow">CAMPUS NICARAGUA / FORMACIÓN</span>
+            <h1>Cursos</h1>
+            <p>Catálogo de cursos, políticas, procedimientos y academias de Universidad Monge.</p>
+        </div>
+
+        <div class="courses-date">
+            UNIVERSIDAD CORPORATIVA<br>
+            <strong style="display:inline-block;margin-top:5px">UMonge</strong>
+        </div>
+    </div>
+
+    <div class="courses-stats">
+        <div class="course-stat"><span>Contenidos en catálogo</span><strong id="cStTotal">0</strong><small>Cursos, políticas y academias</small></div>
+        <div class="course-stat"><span>Nuevos ingresos</span><strong id="cStNuevos">0</strong><small>Ruta de inducción</small></div>
+        <div class="course-stat"><span>Capacitaciones anuales</span><strong id="cStAnual">0</strong><small>Obligatorias del año</small></div>
+        <div class="course-stat"><span>Categorías</span><strong id="cStCat">0</strong><small>Cursos · Políticas · Academias · Actividades</small></div>
+    </div>
+
+    <div class="courses-section-title">
+        <div>
+            <h2>Catálogo de cursos</h2>
+            <p>Filtra por categoría, subcategoría, tipo de colaborador o empresa. Toca un curso para abrirlo.</p>
+        </div>
+    </div>
+
+    <div class="courses-tools">
+        <input type="search" class="courses-search" id="courseSearch" placeholder="Buscar un curso o política...">
+        <div class="course-filters">
+            <select class="courses-search" id="fCat"><option value="">Todas las categorías</option></select>
+            <select class="courses-search" id="fSub"><option value="">Todas las subcategorías</option></select>
+            <select class="courses-search" id="fColab"><option value="">Todo colaborador</option><option>Nuevo ingreso</option><option>Colaborador activo</option></select>
+            <select class="courses-search" id="fEmpresa"><option value="">Todas las empresas</option></select>
+        </div>
+    </div>
+
+    <p class="courses-count" id="coursesCount"></p>
+    <div class="courses-grid" id="coursesGrid"></div>
+
+    <div class="courses-empty" id="coursesEmpty">No se encontraron cursos con esos criterios.</div>
+    <button type="button" class="courses-more" id="coursesMore">Ver más</button>
+</section>
+
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, DATA = D.catalogo(), PAGE = 12, $ = id => document.getElementById(id), esc = UM.esc;
+    const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const SIGLAS = { "GMG Comercial": "CO", "GMG Servicios": "SE", "GMG Zona Franca": "ZF", "General": "UM" };
+    const CATS = window.UM_CATEGORIAS || {};
+    let shown = PAGE;
+
+    $("fCat").insertAdjacentHTML("beforeend", Object.keys(CATS).map(c => `<option>${esc(c)}</option>`).join(""));
+    $("fEmpresa").insertAdjacentHTML("beforeend", [...new Set(DATA.map(d => d.empresa))].sort().map(v => `<option>${esc(v)}</option>`).join(""));
+    const subs = () => { const cat = $("fCat").value, l = cat ? CATS[cat] : [...new Set(Object.values(CATS).flat())].sort();
+        const prev = $("fSub").value; $("fSub").innerHTML = '<option value="">Todas las subcategorías</option>' + l.map(s => `<option>${esc(s)}</option>`).join(""); if (l.includes(prev)) $("fSub").value = prev; };
+    subs();
+
+    $("cStTotal").textContent = DATA.length; $("cStNuevos").textContent = DATA.filter(d => d.colaborador === "Nuevo ingreso").length;
+    $("cStAnual").textContent = DATA.filter(d => d.anual).length; $("cStCat").textContent = Object.keys(CATS).length;
+
+    if (UM.params.categoria) { $("fCat").value = UM.params.categoria; subs(); }
+    if (UM.params.subcategoria) $("fSub").value = UM.params.subcategoria;
+
+    function card(d) {
+        const ins = D.estaInscrito(d.id), av = ins ? D.avance(d.id) : null;
+        const tag = av === 100 ? ["Completado", "status-done"] : ins ? ["En progreso", "status-progress"] : d.colaborador === "Nuevo ingreso" ? ["Nuevo ingreso", "status-pending"] : d.anual ? ["Anual", "status-progress"] : ["Disponible", "status-progress"];
+        return `<article class="course-card" data-id="${d.id}" tabindex="0">
+            <div class="course-card-top"><div class="course-symbol">${SIGLAS[d.empresa]}</div><span class="course-status ${tag[1]}">${tag[0]}</span></div>
+            <div class="course-category">${esc(d.categoria.replace(" NI", ""))} · ${esc(d.subcategoria)}</div>
+            <h3>${esc(d.titulo)}</h3>
+            <div class="course-meta"><span>Duración</span><strong>${d.minutos} min</strong></div>
+            <div class="course-meta"><span>Dirigido a</span><strong>${d.colaborador}</strong></div>
+            ${ins ? `<div class="cc-bar"><i style="width:${av}%"></i></div>` : ""}</article>`;
+    }
+
+    function render() {
+        const q = norm($("courseSearch").value.trim()), f = { categoria: $("fCat").value, subcategoria: $("fSub").value, colaborador: $("fColab").value, empresa: $("fEmpresa").value };
+        const l = DATA.filter(d => (!q || norm(d.titulo + " " + d.categoria + " " + d.subcategoria + " " + d.codigo).includes(q)) && Object.keys(f).every(k => !f[k] || d[k] === f[k]));
+        $("coursesGrid").innerHTML = l.slice(0, shown).map(card).join("");
+        $("coursesCount").textContent = `${l.length} de ${DATA.length} contenidos`;
+        $("coursesEmpty").style.display = l.length ? "none" : "block";
+        $("coursesMore").style.display = l.length > shown ? "block" : "none";
+    }
+    $("fCat").addEventListener("change", () => { subs(); shown = PAGE; render(); });
+    ["courseSearch", "fSub", "fColab", "fEmpresa"].forEach(id => $(id).addEventListener(id === "courseSearch" ? "input" : "change", () => { shown = PAGE; render(); }));
+    $("coursesMore").addEventListener("click", () => { shown += PAGE; render(); });
+    const abrir = e => { const c = e.target.closest(".course-card"); if (c && (e.type === "click" || e.key === "Enter")) UM.open("curso", { id: +c.dataset.id }); };
+    $("coursesGrid").addEventListener("click", abrir); $("coursesGrid").addEventListener("keydown", abrir);
+    render();
+})();
+</script>

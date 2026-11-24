@@ -1,0 +1,101 @@
+{
+  "Capacitación Anual Debida Diligencia para el conocimiento del Proveedor": {
+    "objetivo": "Dotar a los colaboradores encargados del proceso, sobre los conocimientos necesarios para la correcta aplicación de la política de Debida Diligencia indicada en el Manual PLA/FT/FP, para el conocimiento del Aliado de Negocio persona Natural o Jurídica que establece relación comercial con GMG Servicios S.A.",
+    "aprobatoria": 80,
+    "intentos": 3,
+    "preguntas": [
+      {
+        "q": "¿De acuerdo con la política a los proveedores de servicios como ENACAL, UNION FENOSA y CLARO, se les estructura expedientes?",
+        "op": [
+          "Verdadero.",
+          "Falso."
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿Cuáles son los formatos que deben completar los Proveedores de Bienes y/o servicios de agencias de cobro externas Persona Naturales y/o Jurídicos en el proceso de la DDC?",
+        "op": [
+          "Formulario Debida Diligencia.",
+          "Carta donde se indique que la empresa, accionistas, representantes legales, directivos, altas gerencias de la empresa no han estado involucrados en temas de LA/FT/FP.",
+          "Carta de Legitimidad de documentos.",
+          "Todas las anteriores"
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿En cuánto tiempo las Gerencias Operativas deben notificar al área de Cumplimiento la formalización de contratación con un proveedor de bienes y/o servicios de agencias cobro externa?",
+        "op": [
+          "En un período de una semana",
+          "En un término de 24 horas",
+          "a y b son correctas"
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿Cuál es el área encargada del llenado de la matriz de riesgo de Proveedores de Bienes y/o servicios de agencias de cobro externas?",
+        "op": [
+          "Oficialía de Cumplimiento",
+          "Gerencia Operativa",
+          "Jefaturas"
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿El área de Cumplimiento es la encargada de realizar los filtros en sitio web y listas ONU y OFAC, del propietario del Proveedor de Bienes y/o servicios de agencias de cobro externas, Representante legal, accionistas, miembros de Junta Directiva y beneficiarios finales?",
+        "op": [
+          "Verdadero.",
+          "Falso."
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿Cuáles son las responsabilidades con la prevención del LA/FT/FP descritas en el Código de ética?",
+        "op": [
+          "Cumplir con lo establecido en la Política de debida diligencia para el conocimiento del colaborador, Política y procedimiento de debida diligencia para el conocimiento de proveedores de fondos y bienes y servicios, aliados de negocios y Política para Clientes PEP, familiar de PEP dentro del cuarto grado de consanguinidad y segundo de afinidad, o colaborador cercano del PEP y PNP.",
+          "Cumplir con todo lo estipulado en el Manual PLA/FT/FP.",
+          "Informar oportunamente al Oficial de Cumplimiento, situaciones anómalas que violenten las Políticas establecidas en el Manual PLA/FT/FP.",
+          "Todas las anteriores."
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿Cuándo existe cambio del propietario y/o Representante Legal de un Proveedor de Bienes y/o servicios de agencias de cobro externas debe completar los formatos establecidos para la Debida Diligencia?",
+        "op": [
+          "Verdadero.",
+          "Falso."
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿Cuál es la periodicidad de revisión de expedientes de Proveedores de Bienes y/o servicios de agencias de cobro externas por parte del Área de Cumplimiento?",
+        "op": [
+          "Cada 2 años",
+          "Cada 6 meses",
+          "Cada año"
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿Cuáles son los documentos que deben presentar los Proveedores de Bienes y/o Servicios de agencias de cobro externas que son Sujetos Obligados regulados por SIBOIF, CONAMI y/o UAF?",
+        "op": [
+          "Certificado de Inscripción u Operación de la entidad supervisada.",
+          "Carta de no objeción del Nombramiento del Oficial de Cumplimiento por la entidad supervisada.",
+          "a y b son correctas"
+        ],
+        "ok": null
+      },
+      {
+        "q": "¿Cuáles son los documentos requeridos en la actualización de expedientes de Proveedores de Bienes y/o servicios de agencias de cobro externas según aplique?",
+        "op": [
+          "Cedula RUC.",
+          "Matricula de la Alcaldía.",
+          "Certificado de Beneficiario Final.",
+          "Reformas al acta constitutiva.",
+          "Nombramiento del Representante Legal.",
+          "Todas las anteriores."
+        ],
+        "ok": null
+      }
+    ]
+  }
+}

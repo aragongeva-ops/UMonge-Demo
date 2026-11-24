@@ -1,0 +1,174 @@
+<style>
+.home-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.home-head h1 { font-size: 30px; margin: 9px 0 8px; }
+.home-head p { font-size: 13px; }
+.home-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 15px; margin: 26px 0 28px; }
+.home-kpis article { padding: 20px; }
+.home-kpis span { font-size: 12px; }
+.home-kpis h2 { font-size: 32px; margin: 10px 0 6px; }
+.home-kpis small { font-size: 11px; }
+
+.home-grid { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(280px, 1fr); gap: 18px; align-items: start; }
+.home-grid > article { padding: 22px; }
+.hc-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px; }
+.hc-top h2, .home-timeline h2 { font-size: 18px; }
+.hc-link { background: none; border: 0; cursor: pointer; font-size: 11px; font-weight: 800; letter-spacing: .5px; color: #EF2B2B; }
+
+.hc-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.hc-toolbar select, .hc-toolbar input { padding: 10px 12px; border-radius: 8px; font: inherit; font-size: 12px; color: #f4f2f2;
+    background: rgba(12,12,15,.65); border: 1px solid rgba(255,255,255,.16); }
+.hc-toolbar input { flex: 1; min-width: 140px; }
+.hc-toolbar select:focus, .hc-toolbar input:focus { outline: none; border-color: #ef2b2b; }
+
+.hc-row { display: flex; gap: 16px; align-items: center; padding: 14px 0; border-top: 1px solid var(--border); position: relative; }
+.hc-row:first-child { border-top: 0; }
+.hc-thumb { background: none; border: 0; padding: 0; cursor: pointer; border-radius: 8px; }
+.hc-thumb:hover .thumb { outline: 2px solid #ef2b2b; }
+.hc-info { flex: 1; min-width: 0; }
+.hc-title { display: flex; align-items: center; gap: 6px; }
+.hc-title a { font-size: 14px; font-weight: 700; color: #ff8f8f; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; overflow: hidden; text-overflow: ellipsis; }
+.hc-title a:hover { color: #fff; }
+.hc-star { background: none; border: 0; cursor: pointer; font-size: 16px; color: #f2c14e; padding: 0; }
+.hc-info small { display: block; font-size: 11px; margin: 3px 0 8px; }
+.hc-prog { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+.hc-prog .bar { width: 130px; max-width: 40%; height: 6px; border-radius: 4px; background: rgba(255,255,255,.14); overflow: hidden; }
+.hc-prog .bar i { display: block; height: 100%; background: linear-gradient(90deg, #b5121b, #ff6b6b); }
+.hc-prog em { font-style: normal; }
+
+.hc-more { position: relative; }
+.hc-more summary { list-style: none; cursor: pointer; padding: 6px 10px; border-radius: 8px; font-size: 18px; line-height: 1; }
+.hc-more summary:hover { background: rgba(255,255,255,.1); }
+.hc-more summary::-webkit-details-marker { display: none; }
+.hc-more > div { position: absolute; right: 0; top: 30px; z-index: 5; min-width: 190px; padding: 6px; border-radius: 10px;
+    background: #1b1b1f; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 14px 30px rgba(0,0,0,.45); }
+.hc-more button { display: block; width: 100%; text-align: left; padding: 9px 11px; border: 0; border-radius: 7px; background: none; color: #d4d4da; font-size: 12px; cursor: pointer; }
+.hc-more button:hover { background: rgba(217,0,0,.18); color: #fff; }
+
+.hc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.hc-card { padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,.04); }
+.hc-card .hc-thumb { width: 100%; margin-bottom: 10px; }
+.hc-empty { text-align: center; padding: 30px 10px; font-size: 13px; }
+
+.tl-day { font-size: 11px; font-weight: 800; letter-spacing: .5px; margin: 18px 0 8px; text-transform: capitalize; }
+.tl-day:first-of-type { margin-top: 14px; }
+.tl-item { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--border); }
+.tl-ic { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex-shrink: 0; background: rgba(217,0,0,.18); color: #ff8f8f; font-size: 15px; }
+.tl-item strong { display: block; font-size: 12px; line-height: 1.4; }
+.tl-item small { font-size: 11px; }
+.tl-item button { margin-left: auto; padding: 7px 11px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700; color: #f4f2f2;
+    background: transparent; border: 1px solid rgba(255,255,255,.2); }
+.tl-item button:hover { border-color: #ef2b2b; }
+
+@media (max-width: 980px) { .home-grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .thumb { width: 92px; height: 58px; } .hc-prog .bar { width: 70px; } }
+</style>
+
+<section class="home">
+
+    <div class="home-head">
+        <span class="home-eyebrow">CAMPUS NICARAGUA</span>
+        <h1>Bienvenido a UMonge, <span id="hmName"></span></h1>
+        <p>Tu espacio de formación, aprendizaje y desarrollo en Grupo Monge.</p>
+    </div>
+
+    <div class="home-kpis" id="hmKpis"></div>
+
+    <div class="home-grid">
+        <article class="home-courses">
+            <div class="hc-top">
+                <h2>Mis cursos</h2>
+                <button type="button" class="hc-link" data-go="cursos">VER CATÁLOGO COMPLETO →</button>
+            </div>
+            <div class="hc-toolbar">
+                <select id="hcFiltro" aria-label="Filtrar">
+                    <option value="todos">Todos</option><option value="progreso">En progreso</option>
+                    <option value="completados">Completados</option><option value="nuevos">Sin iniciar</option><option value="fav">Favoritos</option>
+                </select>
+                <input type="search" id="hcBuscar" placeholder="Buscar en mis cursos">
+                <select id="hcOrden" aria-label="Ordenar">
+                    <option value="acceso">Ordenar por último acceso</option><option value="nombre">Ordenar por nombre</option><option value="avance">Ordenar por avance</option>
+                </select>
+                <select id="hcVista" aria-label="Vista"><option value="lista">Lista</option><option value="tarjetas">Tarjetas</option></select>
+            </div>
+            <div id="hcLista"></div>
+        </article>
+
+        <article class="home-timeline">
+            <h2>Línea de tiempo</h2>
+            <small class="mut" style="font-size:11px">Próximas entregas y evaluaciones</small>
+            <div id="tlLista"></div>
+        </article>
+    </div>
+</section>
+
+<script>
+(function () {
+    const D = window.UMData, UM = window.UM, $ = id => document.getElementById(id), esc = UM.esc;
+    $("hmName").textContent = UM.nombre;
+    document.querySelector(".home-eyebrow").textContent = "CAMPUS " + D.paisNombre().toUpperCase();
+    if (UM.rol === "estudiante") document.querySelector(".hc-link").hidden = true;
+
+    function kpis() {
+        const m = D.misCursos(), prog = m.filter(c => c.avance > 0 && c.avance < 100).length, ok = m.filter(c => c.avance === 100).length;
+        const prom = m.length ? Math.round(m.reduce((s, c) => s + c.avance, 0) / m.length) : 0;
+        $("hmKpis").innerHTML = [["Cursos asignados", m.length, "Cursos disponibles"], ["En progreso", prog, "Cursos iniciados"],
+            ["Completados", ok, "Con certificado"], ["Avance general", prom + "%", "Promedio de mis cursos"]]
+            .map(([l, v, s]) => `<article><span>${l}</span><h2>${v}</h2><small>${s}</small></article>`).join("");
+    }
+
+    function filas() {
+        const f = $("hcFiltro").value, q = $("hcBuscar").value.trim().toLowerCase(), o = $("hcOrden").value;
+        let m = D.misCursos().filter(c => (!q || c.titulo.toLowerCase().includes(q)) &&
+            (f === "todos" || (f === "progreso" && c.avance > 0 && c.avance < 100) || (f === "completados" && c.avance === 100) ||
+             (f === "nuevos" && c.avance === 0) || (f === "fav" && c.fav)));
+        m.sort((a, b) => o === "nombre" ? a.titulo.localeCompare(b.titulo, "es") : o === "avance" ? b.avance - a.avance : (b.acceso || "").localeCompare(a.acceso || ""));
+        return m;
+    }
+
+    const menu = c => `<details class="hc-more"><summary aria-label="Más opciones">⋮</summary><div>
+        <button data-a="abrir" data-id="${c.id}">Abrir curso</button>
+        <button data-a="fav" data-id="${c.id}">${c.fav ? "Quitar de favoritos" : "Marcar como favorito"}</button>
+        ${c.avance === 100 ? `<button data-a="cert" data-id="${c.id}">Descargar certificado</button>` : ""}</div></details>`;
+    const prog = c => `<div class="hc-prog"><span class="bar"><i style="width:${c.avance}%"></i></span><em>${c.avance === 0 ? "Pendiente de iniciar" : c.avance + "% completado"}</em></div>`;
+
+    function lista() {
+        const m = filas(), tarjetas = $("hcVista").value === "tarjetas";
+        if (!m.length) { $("hcLista").innerHTML = '<div class="hc-empty mut">No hay cursos con esos criterios.</div>'; return; }
+        $("hcLista").innerHTML = tarjetas
+            ? `<div class="hc-cards">${m.map(c => `<div class="hc-card"><button class="hc-thumb" data-a="abrir" data-id="${c.id}">${D.thumb(c, "lg")}</button>
+                <div class="hc-title"><button class="hc-star" data-a="fav" data-id="${c.id}" title="Favorito">${c.fav ? "★" : "☆"}</button>
+                <a data-a="abrir" data-id="${c.id}">${esc(c.titulo)}</a></div><small class="mut">${esc(c.empresa)} · ${esc(c.area)}</small>${prog(c)}</div>`).join("")}</div>`
+            : m.map(c => `<div class="hc-row"><button class="hc-thumb" data-a="abrir" data-id="${c.id}" aria-label="Abrir ${esc(c.titulo)}">${D.thumb(c)}</button>
+                <div class="hc-info"><div class="hc-title"><button class="hc-star" data-a="fav" data-id="${c.id}" title="Favorito">${c.fav ? "★" : "☆"}</button>
+                <a data-a="abrir" data-id="${c.id}">${esc(c.titulo)}</a></div><small class="mut">${esc(c.empresa)} · ${esc(c.area)}</small>${prog(c)}</div>${menu(c)}</div>`).join("");
+    }
+
+    function linea() {
+        const ev = D.eventos(); let dia = "";
+        $("tlLista").innerHTML = ev.length ? ev.map(e => {
+            const d = UM.fecha(e.fecha, { weekday: "long", day: "numeric", month: "long" });
+            const cab = d !== dia ? `<div class="tl-day mut">${d}</div>` : ""; dia = d;
+            return `${cab}<div class="tl-item"><span class="tl-ic">${e.tipo === "Cuestionario" ? "☑" : "⇪"}</span>
+                <div><strong>${esc(e.titulo)}</strong><small class="mut">${e.hora} · ${e.tipo}</small></div>
+                <button type="button" data-a="abrir" data-id="${e.curso}">Abrir</button></div>`; }).join("")
+            : '<div class="hc-empty mut">No tienes entregas próximas. ¡Estás al día!</div>';
+    }
+
+    const redibujar = () => { kpis(); lista(); linea(); };
+    const root = $("hcLista").closest(".home");
+
+    root.addEventListener("click", e => {
+        const b = e.target.closest("[data-a]"); if (!b) return;
+        const id = +b.dataset.id;
+        if (b.dataset.a === "abrir") { D.tocar(id); UM.open("curso", { id }); }
+        if (b.dataset.a === "fav") { UM.toast(D.favorito(id) ? "Añadido a favoritos" : "Quitado de favoritos"); redibujar(); }
+        if (b.dataset.a === "cert") { const c = D.curso(id);
+            window.UMExport.certificado({ nombre: UM.usuario, curso: c.titulo, fecha: UM.fecha(new Date(), { day: "2-digit", month: "2-digit", year: "numeric" }), empresa: c.empresa }); }
+    });
+    document.addEventListener("click", e => { if (!e.target.closest(".hc-more")) document.querySelectorAll(".hc-more[open]").forEach(d => d.removeAttribute("open")); });
+    ["hcFiltro", "hcOrden", "hcVista"].forEach(id => $(id).addEventListener("change", lista));
+    $("hcBuscar").addEventListener("input", lista);
+
+    redibujar();
+})();
+</script>

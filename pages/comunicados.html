@@ -1,0 +1,335 @@
+
+<style>
+.comunicados-page {
+    color: var(--text, var(--text));
+    width: 100%;
+    font-family: Inter, Arial, sans-serif;
+}
+.comunicados-page * { box-sizing: border-box; }
+
+.comunicados-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+.comunicados-eyebrow {
+    color: #ef4444;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+.comunicados-header h1 {
+    font-size: 27px;
+    margin: 8px 0;
+}
+.comunicados-header p {
+    color: #b2b2b5;
+    font-size: 13px;
+    margin: 0;
+}
+.comunicados-button {
+    background: #b5121b;
+    color: white;
+    border: 0;
+    padding: 11px 16px;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.comunicados-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 15px;
+    margin-bottom: 23px;
+}
+.comunicados-stat, .comunicados-card {
+    background: linear-gradient(135deg, var(--stat-from),var(--stat-to));
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 13px;
+    padding: 18px;
+}
+.comunicados-stat span {
+    color: #c0c0c3;
+    font-size: 12px;
+}
+.comunicados-stat strong {
+    display: block;
+    font-size: 27px;
+    margin-top: 8px;
+}
+.comunicados-toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+.comunicados-toolbar input, .comunicados-toolbar select {
+    background: #101013;
+    border: 1px solid #3a3a40;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 11px 12px;
+    outline: none;
+}
+.comunicados-toolbar input {
+    flex: 1;
+    min-width: 180px;
+}
+.comunicados-list {
+    display: grid;
+    gap: 14px;
+}
+.comunicado-item {
+    background: linear-gradient(135deg, var(--tone-421018,#202023), var(--tone-21090d,#111114));
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 13px;
+    padding: 19px;
+}
+.comunicado-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.comunicado-category {
+    color: #ff777d;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+.comunicado-date {
+    color: #b2b2b5;
+    font-size: 11px;
+}
+.comunicado-item h3 {
+    margin: 12px 0 8px;
+    font-size: 16px;
+}
+.comunicado-item p {
+    color: #c6c6c9;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0 0 14px;
+}
+.comunicado-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 12px;
+}
+.comunicado-tag {
+    font-size: 10px;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.08);
+    color: #f3dfe1;
+}
+.comunicado-link {
+    background: transparent;
+    border: 0;
+    color: #ff737a;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.comunicados-empty {
+    color: var(--muted);
+    text-align: center;
+    padding: 30px;
+    background: var(--tone-260b10,#141417);
+    border-radius: 12px;
+}
+@media(max-width:700px) {
+    .comunicados-stats { grid-template-columns: 1fr; }
+    .comunicados-header h1 { font-size: 23px; }
+}
+</style>
+
+<section class="comunicados-page">
+    <div class="comunicados-header">
+        <div>
+            <div class="comunicados-eyebrow">CAMPUS NICARAGUA / INFORMACIÓN</div>
+            <h1>Comunicados institucionales</h1>
+            <p>Consulta avisos, noticias y actualizaciones importantes de UMonge.</p>
+        </div>
+        <button class="comunicados-button" type="button" id="comunicadosRefresh">
+            Actualizar lista
+        </button>
+    </div>
+
+    <div class="comunicados-stats">
+        <div class="comunicados-stat">
+            <span>Comunicados publicados</span>
+            <strong>04</strong>
+        </div>
+        <div class="comunicados-stat">
+            <span>Prioridad alta</span>
+            <strong>01</strong>
+        </div>
+        <div class="comunicados-stat">
+            <span>Este mes</span>
+            <strong>03</strong>
+        </div>
+    </div>
+
+    <div class="comunicados-toolbar">
+        <input type="search" id="comunicadosSearch" placeholder="Buscar comunicado...">
+        <select id="comunicadosCategory">
+            <option value="todos">Todas las categorías</option>
+            <option value="Institucional">Institucional</option>
+            <option value="Capacitación">Capacitación</option>
+            <option value="Académico">Académico</option>
+        </select>
+        <select id="comunicadosPriority">
+            <option value="todos">Todas las prioridades</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Informativa">Informativa</option>
+        </select>
+    </div>
+
+    <div class="comunicados-list" id="comunicadosList">
+        <article class="comunicado-item" data-category="Institucional" data-priority="Alta">
+            <div class="comunicado-top">
+                <span class="comunicado-category">INSTITUCIONAL</span>
+                <span class="comunicado-date">18 de noviembre de 2026</span>
+            </div>
+            <h3>Actualización de información en la plataforma UMonge</h3>
+            <p>Se informa a los colaboradores que deben revisar periódicamente la plataforma para mantenerse al tanto de las actividades, materiales y avisos de capacitación disponibles.</p>
+            <div class="comunicado-footer">
+                <span class="comunicado-tag">Prioridad alta</span>
+                <button class="comunicado-link" type="button">Ver comunicado →</button>
+            </div>
+        </article>
+
+        <article class="comunicado-item" data-category="Capacitación" data-priority="Media">
+            <div class="comunicado-top">
+                <span class="comunicado-category">CAPACITACIÓN</span>
+                <span class="comunicado-date">15 de noviembre de 2026</span>
+            </div>
+            <h3>Actividades de capacitación pendientes</h3>
+            <p>Se recuerda a los participantes revisar sus cursos asignados y completar las actividades que todavía se encuentran pendientes.</p>
+            <div class="comunicado-footer">
+                <span class="comunicado-tag">Prioridad media</span>
+                <button class="comunicado-link" type="button">Ver comunicado →</button>
+            </div>
+        </article>
+
+        <article class="comunicado-item" data-category="Académico" data-priority="Media">
+            <div class="comunicado-top">
+                <span class="comunicado-category">ACADÉMICO</span>
+                <span class="comunicado-date">12 de noviembre de 2026</span>
+            </div>
+            <h3>Disponibilidad de nuevos materiales</h3>
+            <p>Se han habilitado materiales de consulta para apoyar el desarrollo de los cursos. Los participantes pueden encontrarlos en el apartado de actividades y materiales.</p>
+            <div class="comunicado-footer">
+                <span class="comunicado-tag">Prioridad media</span>
+                <button class="comunicado-link" type="button">Ver comunicado →</button>
+            </div>
+        </article>
+
+        <article class="comunicado-item" data-category="Institucional" data-priority="Informativa">
+            <div class="comunicado-top">
+                <span class="comunicado-category">INSTITUCIONAL</span>
+                <span class="comunicado-date">05 de noviembre de 2026</span>
+            </div>
+            <h3>Bienvenidos al Campus UMonge</h3>
+            <p>Este espacio permite consultar información de formación, cursos, actividades y recursos de aprendizaje de la organización.</p>
+            <div class="comunicado-footer">
+                <span class="comunicado-tag">Informativo</span>
+                <button class="comunicado-link" type="button">Ver comunicado →</button>
+            </div>
+        </article>
+    </div>
+    <div class="comunicados-empty" id="comunicadosEmpty" hidden>
+        No se encontraron comunicados con esos criterios.
+    </div>
+</section>
+
+<script>
+(function () {
+    const root = document.querySelector(".comunicados-page");
+    if (!root) return;
+
+    const search = root.querySelector("#comunicadosSearch");
+    const category = root.querySelector("#comunicadosCategory");
+    const priority = root.querySelector("#comunicadosPriority");
+    const list = root.querySelector("#comunicadosList");
+    const empty = root.querySelector("#comunicadosEmpty");
+    const refresh = root.querySelector("#comunicadosRefresh");
+
+    function filterAnnouncements() {
+        const term = search.value.toLowerCase().trim();
+        const selectedCategory = category.value;
+        const selectedPriority = priority.value;
+        let visible = 0;
+
+        list.querySelectorAll(".comunicado-item").forEach(function (item) {
+            const matchesText = item.textContent.toLowerCase().includes(term);
+            const matchesCategory = selectedCategory === "todos" || item.dataset.category === selectedCategory;
+            const matchesPriority = selectedPriority === "todos" || item.dataset.priority === selectedPriority;
+            const show = matchesText && matchesCategory && matchesPriority;
+
+            item.hidden = !show;
+            if (show) visible++;
+        });
+
+        empty.hidden = visible > 0;
+    }
+
+    search.addEventListener("input", filterAnnouncements);
+    category.addEventListener("change", filterAnnouncements);
+    priority.addEventListener("change", filterAnnouncements);
+
+    refresh.addEventListener("click", function () {
+        search.value = "";
+        category.value = "todos";
+        priority.value = "todos";
+        filterAnnouncements();
+    });
+})();
+</script>
+
+<script>
+(function () {
+    const root = document.querySelector(".comunicados-page"); if (!root) return;
+    const UM = window.UM, list = root.querySelector("#comunicadosList"), KEY = "umonge_comunicados";
+    const guardados = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } };
+    const adj = c => c.adjunto ? `<button class="comunicado-link" type="button" data-adj="${c.adjunto.id}" data-nombre="${UM.esc(c.adjunto.nombre)}" data-tipo="${c.adjunto.tipo}">📎 ${UM.esc(c.adjunto.nombre)}</button>` : "";
+    const item = c => `<article class="comunicado-item" data-category="${UM.esc(c.cat)}" data-priority="${UM.esc(c.pri)}"><div class="comunicado-top"><span class="comunicado-category">${UM.esc(c.cat.toUpperCase())}</span>
+        <span class="comunicado-date">${UM.fecha(c.fecha)}</span></div><h3>${UM.esc(c.titulo)}</h3><p>${UM.esc(c.texto)}</p><div class="comunicado-footer"><span class="comunicado-tag">Prioridad ${UM.esc(c.pri.toLowerCase())}</span>
+        <span style="display:flex;gap:12px;flex-wrap:wrap">${adj(c)}<button class="comunicado-link" type="button" data-ver="1">Ver comunicado →</button></span></div></article>`;
+    guardados().reverse().forEach(c => list.insertAdjacentHTML("afterbegin", item(c)));
+
+    list.addEventListener("click", async e => {
+        const a = e.target.closest("[data-adj]");                       // abrir el archivo adjunto (PDF, imagen o video)
+        if (a) { const f = await window.UMStore.get(+a.dataset.adj); if (f) UM.abrir({ nombre: f.nombre, tipo: f.tipo, blob: f.blob }); else UM.toast("No se encontró el adjunto en este navegador"); return; }
+        const b = e.target.closest(".comunicado-link"); if (!b) return; const it = b.closest(".comunicado-item");
+        UM.modal({ titulo: it.querySelector("h3").textContent, ancho: 560, html: `<p class="mut" style="font-size:11px;margin-bottom:10px">${it.querySelector(".comunicado-category").textContent} · ${it.querySelector(".comunicado-date").textContent}</p><p>${UM.esc(it.querySelector("p").textContent)}</p>` });
+    });
+
+    if (UM.rol !== "estudiante") {                                       // publicar (administrador y profesor)
+        const btn = document.createElement("button"); btn.className = "comunicados-button"; btn.type = "button"; btn.textContent = "+ Publicar comunicado"; btn.style.marginLeft = "8px";
+        root.querySelector("#comunicadosRefresh").after(btn);
+        btn.addEventListener("click", () => { const m = UM.modal({ titulo: "Publicar comunicado", ancho: 540, html: `<div class="um-field"><label>Título</label><input id="cmT"></div>
+            <div class="um-field"><label>Categoría</label><select id="cmC"><option>Institucional</option><option>Capacitación</option><option>Académico</option></select></div>
+            <div class="um-field"><label>Prioridad</label><select id="cmP"><option>Alta</option><option selected>Media</option><option>Baja</option></select></div>
+            <div class="um-field"><label>Texto</label><textarea id="cmX" rows="4"></textarea></div>
+            <div class="um-field"><label>Adjunto (opcional): PDF, imagen o video</label><input id="cmF" type="file" accept=".pdf,image/*,video/*"></div><button class="um-btn" id="cmOk">Publicar</button>` });
+            m.el.querySelector("#cmOk").addEventListener("click", async () => { const g = id => m.el.querySelector(id).value.trim(), file = m.el.querySelector("#cmF").files[0];
+                const c = { titulo: g("#cmT"), cat: g("#cmC"), pri: g("#cmP"), texto: g("#cmX"), fecha: new Date().toISOString() };
+                if (!c.titulo || !c.texto) { UM.toast("Escribe el título y el texto"); return; }
+                if (file) { try { const id = await window.UMStore.add({ ambito: "comunicado", titulo: c.titulo }, file); c.adjunto = { id, nombre: file.name, tipo: window.UMStore.tipoDe(file.name) }; }
+                    catch (e) { UM.toast("No se pudo guardar el adjunto"); return; } }
+                const l = guardados(); l.push(c); localStorage.setItem(KEY, JSON.stringify(l));
+                list.insertAdjacentHTML("afterbegin", item(c)); m.cerrar(); UM.toast("Comunicado publicado"); }); });
+    }
+})();
+</script>

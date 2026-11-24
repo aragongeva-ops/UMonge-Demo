@@ -1,0 +1,70 @@
+<style>
+.academias-page .ac-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.academias-page h1 { font-size: 28px; margin: 9px 0; }
+.ac-head p { font-size: 13px; }
+.ac-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+.ac-stats article { padding: 20px; }
+.ac-stats h2 { font-size: 30px; margin: 12px 0; }
+.ac-stats span { font-size: 12px; }
+.ac-section { margin-bottom: 18px; }
+.ac-section h2 { font-size: 19px; }
+.ac-section p { font-size: 13px; }
+.ac-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.ac-card { padding: 22px; display: flex; flex-direction: column; }
+.ac-num { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 12px; margin-bottom: 20px;
+    background: linear-gradient(135deg, #D90000, #EF2B2B); font-size: 21px; color: #fff; }
+.ac-tag { font-size: 10px; color: #EF2B2B; font-weight: 800; letter-spacing: .5px; }
+.ac-card h3 { font-size: 17px; margin: 10px 0; }
+.ac-card > p { font-size: 12px; line-height: 1.6; flex: 1; }
+.ac-areas { margin: 16px 0; border-top: 1px solid var(--border); padding-top: 12px; }
+.ac-areas div { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; }
+.ac-btn { width: 100%; padding: 12px; border: none; border-radius: 9px; cursor: pointer; color: #fff; font-weight: 700; font-size: 12px;
+    background: linear-gradient(110deg, #b5121b, #ef2b2b); background-size: 160% 100%; transition: background-position .4s, transform .2s; }
+.ac-btn:hover { background-position: 100% 0; transform: translateY(-1px); }
+.ac-note { margin-top: 28px; padding: 22px; font-size: 12px; line-height: 1.7; }
+.ac-note h3 { font-size: 15px; margin-bottom: 6px; }
+</style>
+
+<section class="academias-page">
+
+    <div class="ac-head" style="margin-bottom:30px">
+        <span class="ac-eyebrow">FORMACIÓN Y DESARROLLO</span>
+        <h1>Academias</h1>
+        <p>Espacios de aprendizaje por línea de producto y negocio de Grupo Monge.</p>
+    </div>
+
+    <div class="ac-stats">
+        <article><span>Academias disponibles</span><h2 id="acN">0</h2><small>Líneas de producto</small></article>
+        <article><span>Cursos de academia</span><h2 id="acTotal">0</h2><small>Contenido de aprendizaje</small></article>
+        <article><span>Iniciadas por mí</span><h2 id="acMias">0</h2><small>Academias en progreso</small></article>
+        <article><span>Completadas</span><h2 id="acOk">0</h2><small>Formaciones finalizadas</small></article>
+    </div>
+
+    <div class="ac-section"><h2>Nuestras academias</h2><p>Explora los espacios de formación disponibles.</p></div>
+    <div class="ac-grid" id="acGrid"></div>
+
+    <article class="ac-note">
+        <h3>Administración de academias</h3>
+        Los cursos de cada academia salen del catálogo maestro. Un administrador puede agregar nuevos cursos y materiales desde el módulo de Administración.
+    </article>
+</section>
+
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, $ = id => document.getElementById(id);
+    const SUBS = (window.UM_CATEGORIAS || {})["Academias NI"] || [];
+    const DESC = { "Línea Blanca": "Cocinas, lavadoras, refrigeradoras, máquinas de coser y camas.", "Electrónica": "Xiaomi, Roku TV, Hisense, LG y computadoras.",
+        "Motocicletas": "Motos TVS y Serpento: Sports, Scooter, Cuadraciclos, Mensajeras y Krait.", "Garantías": "Garantía y seguros de los productos.",
+        "Ventas": "Los 8 pasos de la venta y sus refuerzos.", "Microfinanzas": "Escuelitas de Microfinanzas por mes y edición." };
+    const todos = D.catalogo().filter(c => c.categoria === "Academias NI");
+    $("acN").textContent = SUBS.length; $("acTotal").textContent = todos.length;
+    const mios = s => todos.filter(c => c.subcategoria === s && D.estaInscrito(c.id));
+    $("acMias").textContent = SUBS.filter(s => mios(s).some(c => D.avance(c.id) < 100)).length;
+    $("acOk").textContent = SUBS.filter(s => { const t = todos.filter(c => c.subcategoria === s); return t.length && t.every(c => D.avance(c.id) === 100); }).length;
+    $("acGrid").innerHTML = SUBS.map((s, i) => { const items = todos.filter(c => c.subcategoria === s);
+        return `<article class="ac-card"><div class="ac-num">0${i + 1}</div><span class="ac-tag">ACADEMIA</span><h3>${UM.esc(s)}</h3><p>${UM.esc(DESC[s] || "")}</p>
+            <div class="ac-areas">${items.slice(0, 3).map(c => `<div><span>${UM.esc(c.titulo.slice(0, 34))}${c.titulo.length > 34 ? "…" : ""}</span></div>`).join("")}</div>
+            <button type="button" class="ac-btn" data-sub="${UM.esc(s)}">Explorar ${items.length} cursos →</button></article>`; }).join("");
+    $("acGrid").addEventListener("click", e => { const b = e.target.closest("[data-sub]"); if (b) UM.open("cursos", { categoria: "Academias NI", subcategoria: b.dataset.sub }); });
+})();
+</script>

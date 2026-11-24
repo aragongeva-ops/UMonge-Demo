@@ -1,0 +1,41 @@
+<style>
+.sg-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 22px 0; }
+.sg-stats article { padding: 18px; } .sg-stats h2 { font-size: 28px; margin: 8px 0 4px; }
+.sg-top { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+.sg-acts { display: flex; gap: 8px; }
+.sg-btn { padding: 10px 14px; border-radius: 9px; cursor: pointer; font-size: 12px; font-weight: 700; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); }
+.sg-btn:hover { border-color: #ef2b2b; }
+.sg-box { padding: 6px 22px 14px; }
+.sg-wrap { overflow-x: auto; }
+.sg table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 860px; }
+.sg th { text-align: left; padding: 13px 10px; font-size: 11px; white-space: nowrap; }
+.sg td { padding: 13px 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+.sg td a { cursor: pointer; color: #ff8f8f; font-weight: 700; } .sg td a:hover { color: #fff; text-decoration: underline; }
+.sg .bar { display: inline-block; width: 110px; height: 6px; border-radius: 4px; background: rgba(255,255,255,.14); vertical-align: middle; margin-right: 8px; overflow: hidden; }
+.sg .bar i { display: block; height: 100%; background: linear-gradient(90deg, #b5121b, #ff6b6b); }
+.sg .ok { color: #7be2a8; } .sg .no { color: #c6c6cf; }
+.sg-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.sg-head h1 { font-size: 28px; margin: 8px 0 6px; }
+</style>
+<section class="sg">
+    <div class="sg-top"><div class="sg-head"><span class="sg-eyebrow">CAMPUS NICARAGUA / CONTROL ACADÉMICO</span><h1>Seguimiento</h1>
+        <p style="font-size:13px" class="mut">Avance de tu formación y calificaciones.</p></div>
+        <div class="sg-acts"><button class="sg-btn" data-f="csv">⇩ CSV</button><button class="sg-btn" data-f="xlsx">⇩ Excel</button><button class="sg-btn" data-f="pdf">⇩ PDF</button></div></div>
+    <div class="sg-stats" id="sgStats"></div>
+    <article class="sg-box"><div class="sg-wrap"><table id="sgTabla"><thead><tr><th>Curso</th><th>Avance</th><th>Lectura</th><th>Confirmación</th><th>Evaluación</th><th>Mejor nota</th><th>Último acceso</th></tr></thead><tbody id="sgBody"></tbody></table></div></article>
+</section>
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, $ = id => document.getElementById(id), esc = UM.esc;
+    const m = D.misCursos().sort((a, b) => b.avance - a.avance), mk = ok => `<span class="${ok ? "ok" : "no"}">${ok ? "✓" : "○"}</span>`;
+    const prom = m.length ? Math.round(m.reduce((s, c) => s + c.avance, 0) / m.length) : 0;
+    $("sgStats").innerHTML = [["Cursos asignados", m.length, "En mi plan de formación"], ["En progreso", m.filter(c => c.avance > 0 && c.avance < 100).length, "Actualmente iniciados"],
+        ["Por comenzar", m.filter(c => c.avance === 0).length, "Sin iniciar"], ["Avance general", prom + "%", "Promedio de mis cursos"]].map(([a, b, c]) => `<article><span>${a}</span><h2>${b}</h2><small class="mut">${c}</small></article>`).join("");
+    $("sgBody").innerHTML = m.map(c => { const p = D.pasos(c.id), n = D.mejor(c.id);
+        return `<tr><td><a data-id="${c.id}">${esc(c.titulo)}</a></td><td><span class="bar"><i style="width:${c.avance}%"></i></span>${c.avance}%</td><td>${mk(p.lectura)}</td><td>${mk(p.conf)}</td><td>${mk(p.eval)}</td>
+            <td>${n === null ? "—" : n + "/100"}</td><td>${c.acceso ? UM.fecha(c.acceso, { day: "2-digit", month: "short", year: "numeric" }) : "—"}</td></tr>`; }).join("") || '<tr><td colspan="7" class="mut" style="padding:24px;text-align:center">Sin cursos asignados.</td></tr>';
+    $("sgBody").addEventListener("click", e => { const a = e.target.closest("[data-id]"); if (a) UM.open("curso", { id: +a.dataset.id }); });
+    document.querySelector(".sg-acts").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (!b) return; const mtx = window.UMExport.fromTable($("sgTabla")).map(r => r.map(v => v.replace(/^[✓○]$/, x => x === "✓" ? "Sí" : "No")));
+        window.UMExport[b.dataset.f](mtx, "seguimiento_umonge", { titulo: "Seguimiento de " + UM.nombre, hoja: "Seguimiento" }); });
+})();
+</script>

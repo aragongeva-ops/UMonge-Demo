@@ -1,0 +1,340 @@
+<style>
+.cp-back { background: none; border: 0; cursor: pointer; color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: .5px; margin-bottom: 14px; padding: 0; }
+.cp-head { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; margin-bottom: 22px; }
+.cp-head .thumb { width: 150px; height: 88px; }
+.cp-head > div { flex: 1; min-width: 240px; }
+.cp-head h1 { font-size: 26px; margin: 4px 0 8px; line-height: 1.25; }
+.cp-meta { font-size: 12px; }
+.cp-prog { display: flex; align-items: center; gap: 12px; margin-top: 12px; font-size: 12px; font-weight: 700; }
+.cp-prog .bar { width: 220px; max-width: 55%; height: 8px; border-radius: 5px; background: var(--track, rgba(255,255,255,.14)); overflow: hidden; }
+.cp-prog .bar i { display: block; height: 100%; background: linear-gradient(90deg, #b5121b, #ff6b6b); transition: width .4s; }
+.cp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cp .btn { padding: 10px 14px; border-radius: 9px; cursor: pointer; font-size: 12px; font-weight: 700; color: #f4f2f2; background: rgba(30,30,36,.85); border: 1px solid rgba(255,255,255,.16); }
+.cp .btn:hover:not(:disabled) { border-color: #ef2b2b; }
+.cp .btn.red { background: linear-gradient(110deg, #b5121b, #ef2b2b); border-color: transparent; }
+.cp .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.cp-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; flex-wrap: wrap; position: relative; }
+.cp-tabs > button { padding: 12px 16px; background: none; border: 0; border-bottom: 3px solid transparent; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); }
+.cp-tabs > button:hover { color: var(--text); }
+.cp-tabs > button.on { color: var(--text); border-bottom-color: #ef2b2b; }
+.cp-more { position: absolute; right: 0; top: 46px; z-index: 6; min-width: 210px; padding: 6px; border-radius: 10px; background: #1b1b1f; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 14px 30px rgba(0,0,0,.45); }
+.cp-more[hidden] { display: none; }
+.cp-more button { display: block; width: 100%; text-align: left; padding: 9px 11px; border: 0; border-radius: 7px; background: none; color: #d4d4da; font-size: 12px; cursor: pointer; }
+.cp-more button:hover { background: rgba(217,0,0,.18); color: #fff; }
+
+.cp-layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 18px; align-items: start; }
+.cp-layout.sin-indice { grid-template-columns: minmax(0, 1fr); }
+.cp-layout.sin-indice .cp-index { display: none; }
+.cp-index { padding: 16px; position: sticky; top: 14px; max-height: 80vh; overflow: auto; }
+.cp-index h4 { font-size: 11px; letter-spacing: 1px; margin-bottom: 10px; }
+.cp-index a { display: flex; gap: 8px; padding: 6px 4px; font-size: 12px; cursor: pointer; border-radius: 6px; line-height: 1.4; }
+.cp-index a:hover { background: rgba(255,255,255,.08); }
+.cp-index .sec { font-weight: 800; margin-top: 8px; }
+.cp-index .ok { color: #7be2a8; }
+.cp-main > article { padding: 6px 22px 10px; margin-bottom: 16px; }
+.cp-main > article.pad { padding: 22px; }
+
+.cp-sec summary { list-style: none; cursor: pointer; padding: 16px 0; font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.cp-sec summary::before { content: "▾"; font-size: 13px; transition: .2s; }
+.cp-sec:not([open]) summary::before { transform: rotate(-90deg); }
+.cp-sec summary::-webkit-details-marker { display: none; }
+.cp-item { display: flex; gap: 14px; align-items: center; padding: 13px 0; border-top: 1px solid var(--border); }
+.cp-item .ic { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; font-size: 12px; font-weight: 800; background: rgba(217,0,0,.16); color: #ff8f8f; }
+.cp-item .tx { flex: 1; min-width: 0; }
+.cp-item .tx strong { display: block; font-size: 13px; }
+.cp-item .tx small { font-size: 11px; }
+.cp-item.done .tx strong { opacity: .75; }
+.cp-chk { width: 22px; height: 22px; accent-color: #ef2b2b; cursor: pointer; }
+.cp-link { padding: 7px 12px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); white-space: nowrap; }
+.cp-link:hover { border-color: #ef2b2b; }
+
+.cp-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.cp-tools input, .cp-tools select { padding: 10px 12px; border-radius: 8px; font: inherit; font-size: 12px; color: #f4f2f2; background: rgba(12,12,15,.65); border: 1px solid rgba(255,255,255,.16); }
+.cp-tools input { flex: 1; min-width: 160px; }
+.cp-wrap { overflow-x: auto; }
+.cp table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
+.cp th { text-align: left; padding: 11px 10px; font-size: 11px; letter-spacing: .3px; background: rgba(0,0,0,.35); }
+.cp td { padding: 11px 10px; border-top: 1px solid var(--border); }
+.cp-comp { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--border); }
+.cp-comp:first-of-type { border-top: 0; }
+.cp-badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; background: rgba(255,255,255,.12); }
+.cp-badge.ok { background: rgba(50,190,110,.22); color: #7be2a8; }
+.cp-aviso { padding: 14px 16px; border-radius: 10px; margin-bottom: 16px; font-size: 13px; background: rgba(217,0,0,.14); border: 1px solid rgba(239,43,43,.35); display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+@media (max-width: 900px) { .cp-layout { grid-template-columns: 1fr; } .cp-index { position: static; max-height: none; } }
+
+.cp-note { padding: 12px 14px; border-radius: 10px; font-size: 12px; margin: 10px 0; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); line-height: 1.7; }
+.cp-note.lock { border-color: rgba(239,43,43,.4); background: rgba(217,0,0,.1); }
+.cp-note.ok { border-color: rgba(50,190,110,.4); background: rgba(50,190,110,.1); }
+.cp-step { font-size: 11px; font-weight: 800; letter-spacing: 1px; color: #EF2B2B; }
+.cp-box h3 { font-size: 17px; margin: 6px 0 10px; }
+.cp-box p { font-size: 13px; line-height: 1.7; }
+.cp-box { padding: 22px; margin-bottom: 16px; }
+.cp-q { padding: 18px 0; border-top: 1px solid var(--border); }
+.cp-q:first-of-type { border-top: 0; }
+.cp-q h4 { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+.cp-q small { display: block; margin-bottom: 8px; }
+.cp-q label { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; line-height: 1.5; margin-bottom: 6px; border: 1px solid transparent; }
+.cp-q label:hover { background: rgba(255,255,255,.06); }
+.cp-q label.sel { border-color: #ef2b2b; background: rgba(217,0,0,.12); }
+.cp-q input { margin-top: 3px; accent-color: #ef2b2b; }
+.cp-nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.cp-nav button { width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); }
+.cp-nav button.on { background: rgba(217,0,0,.35); border-color: #ef2b2b; }
+.cp-result { text-align: center; padding: 30px 10px; }
+.cp-result strong { display: block; font-size: 44px; margin: 8px 0; }
+.cp-grade { width: 76px; padding: 7px; border-radius: 7px; font: inherit; font-size: 12px; color: #f4f2f2; background: rgba(12,12,15,.7); border: 1px solid rgba(255,255,255,.2); }
+.cp-edit label { display: block; padding: 4px 0; font-size: 12px; }
+.cp-edit .qrow { padding: 12px 0; border-top: 1px solid rgba(255,255,255,.1); }
+.cp-edit textarea { width: 100%; min-height: 60px; padding: 8px; font: inherit; font-size: 12px; border-radius: 8px; color: #f4f2f2; background: rgba(12,12,15,.7); border: 1px solid rgba(255,255,255,.16); }
+</style>
+<section class="cp" id="cp"></section>
+
+<script>
+(function () {
+    const D = window.UMData, UM = window.UM, root = document.getElementById("cp"), esc = UM.esc;
+    const id = +(UM.params.id || 0), c = D.curso(id), staff = UM.puede("calificar");
+
+    if (!c) {
+        root.innerHTML = `<article class="cp-box" style="text-align:center"><h3>Elige un curso</h3><p class="mut" style="margin:10px 0 18px">No se indicó qué curso abrir.</p>
+            <button class="um-btn" data-go="cursos">Ir al catálogo de cursos</button></article>`;
+        return;
+    }
+    if (UM.rol === "estudiante" && !D.estaInscrito(id)) { UM.toast("No estás inscrito en este curso"); UM.open("dashboard"); return; }
+    const mia = D.estaInscrito(id);   // si no estoy inscrito (administrador/profesor), el curso se ve en modo de solo lectura
+    UM.setTitulo("Cursos / " + c.titulo.slice(0, 46) + (c.titulo.length > 46 ? "…" : ""));
+
+    let tab = "curso", mats = [], ev = null, quiz = null;
+    const largo = d => new Date(d).toLocaleString("es-NI", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    const dur = s => s < 60 ? s + " segundos" : Math.floor(s / 60) + " mins " + (s % 60) + " segundos";
+    const mine = () => mats.filter(m => UM.esDeCurso(m, c));
+    const rec = () => D.rec(id), pasos = () => D.pasos(id), pct = () => D.avance(id);
+
+    /* ---------- encabezado e índice ---------- */
+    function cabecera() {
+        const a = pct();
+        root.querySelector(".cp-head").innerHTML = `${D.thumb(c)}<div><span class="cp-meta mut">${esc(c.categoria)} · ${esc(c.subcategoria)} · Código ${esc(c.codigo)}</span>
+            <h1>${esc(c.titulo)}</h1><span class="cp-meta mut">${c.colaborador}${c.anual ? " · Capacitación anual" : ""} · ${c.minutos} min</span>
+            <div class="cp-prog"><span class="bar"><i style="width:${a}%"></i></span><span>${a}% completado</span></div></div>
+            <div class="cp-actions"><button class="btn" data-a="indice">☰ Índice</button>
+            ${UM.puede("subir") ? '<button class="btn" data-a="subir">+ Agregar material</button>' : ""}
+            ${UM.puede("editarEvaluacion") ? '<button class="btn" data-a="edev">✎ Evaluación</button>' : ""}
+            ${UM.puede("reportes") ? '<button class="btn" data-a="rep">▤ Reporte del curso</button>' : ""}
+            <button class="btn red" data-a="cert" ${a === 100 ? "" : "disabled"} title="${a === 100 ? "" : "Disponible al completar el curso"}">★ Certificado</button></div>`;
+    }
+    function indice() {
+        const p = pasos(), mk = ok => `<span class="${ok ? "ok" : "mut"}">${ok ? "✓" : "○"}</span>`;
+        document.getElementById("cpIndex").innerHTML = `<h4 class="mut">ÍNDICE DEL CURSO</h4><a data-a="ir" data-t="ins">Instrucciones</a>
+            <a data-a="ir" data-t="lec">${mk(p.lectura)}1. Lectura de la política</a><a data-a="ir" data-t="con">${mk(p.conf)}2. Confirmación de lectura</a><a data-a="ir" data-t="eva">${mk(p.eval)}3. Evaluación</a>`;
+    }
+
+    /* ---------- pestaña CURSO ---------- */
+    function vistaCurso() {
+        const r = rec(), p = pasos(), docs = mine().filter(m => m.tipo !== "VIDEO"), vids = mine().filter(m => m.tipo === "VIDEO");
+        const vOk = vids.every(v => (r.video && r.video.ok));
+        const intentos = r.intentos || [], restan = D.INTENTOS - intentos.length, mejor = D.mejor(id);
+        const item = (ic, t, sub, btn) => `<div class="cp-item"><span class="ic">${ic}</span><div class="tx"><strong>${esc(t)}</strong><small class="mut">${sub}</small></div>${btn}</div>`;
+        const lecturaItems = vids.map(v => item("VID", v.titulo, "Video · sin adelantar" + ((r.video && r.video.ok) ? " · visto completo ✓" : ""), `<button class="cp-link" data-a="video" data-m="${v.id}">Ver video</button>`)).join("") +
+            (docs.length ? docs.map(d => item(d.tipo.slice(0, 3), d.titulo, esc(d.nombre) + (d.size ? " · " + d.size : ""), `<button class="cp-link" data-a="doc" data-m="${d.id}">Abrir</button>`)).join("")
+                : item("PDF", "Documento oficial de la política", "Aún no se cargó el archivo", `<button class="cp-link" data-a="doc">Abrir</button>`));
+        const reg = r.lectura ? `<div class="cp-note">Abierto el <strong>${largo(r.lectura.abierta)}</strong>${r.lectura.leida ? `<br>Marcado como leído el <strong>${largo(r.lectura.leida)}</strong> · tiempo transcurrido: <strong>${dur(r.lectura.seg)}</strong>` : ""}</div>` : "";
+
+        const conf = !mia ? `<div class="cp-note">Vista previa: no estás inscrito en este curso.</div>` : !p.lectura ? `<div class="cp-note lock">🔒 No disponible, a menos que: la actividad <strong>Lectura de la política</strong> esté marcada como completada.</div>`
+            : p.conf ? `<div class="cp-note ok">✓ Confirmaste la lectura el <strong>${largo(r.conf.fecha)}</strong>.</div>`
+            : `<p class="um-note"><button class="um-btn" data-a="confirmar">SÍ, confirmo la lectura</button></p>`;
+
+        let evalu = `<div class="cp-note lock">🔒 No disponible, a menos que: la <strong>Confirmación de lectura</strong> esté completada.</div>`;
+        if (p.conf || !mia) {
+            const pend = ev && ev.preguntas.some(q => q.ok === null || q.ok === undefined);
+            evalu = `<div class="cp-note">Responda las siguientes preguntas de selección única.<br>Calificación aprobatoria: <strong>${ev ? ev.aprobatoria : 80}%</strong> · Intentos permitidos: <strong>${D.INTENTOS}</strong> · Método de calificación: <strong>calificación más alta</strong>${ev && ev.demo ? "<br><em>Evaluación de demostración: el profesor puede cargar las preguntas oficiales con «✎ Evaluación».</em>" : ""}</div>`;
+            if (intentos.length) evalu += `<div class="cp-wrap"><table><thead><tr><th>Intento</th><th>Estado</th><th>Iniciado</th><th>Completado</th><th>Duración</th><th>Calificación</th></tr></thead><tbody>` +
+                intentos.map((a, i) => `<tr><td>${i + 1}</td><td>Terminado</td><td>${largo(a.ini)}</td><td>${largo(a.fin)}</td><td>${dur(a.seg)}</td><td>${a.nota}/100</td></tr>`).join("") + `</tbody></table></div>
+                <div class="cp-note ${mejor >= 80 ? "ok" : ""}">Calificación más alta: <strong>${mejor} / 100</strong> ${mejor >= 80 ? "· ✓ Aprobado" : "· No alcanza la calificación aprobatoria"}</div>`;
+            evalu += pend ? `<div class="cp-note lock">⏳ La evaluación está en preparación: falta definir las respuestas correctas.${staff ? " Usa «✎ Evaluación» para definirlas." : ""}</div>`
+                : !mia ? "" : restan > 0 ? `<p class="um-note"><button class="um-btn" data-a="iniciar">${intentos.length ? "Iniciar otro intento" : "Iniciar evaluación"}</button> <small class="mut">Intentos restantes: ${restan}</small></p>`
+                : `<div class="cp-note lock">Ya usaste los ${D.INTENTOS} intentos permitidos.</div>`;
+        }
+        return `<article class="cp-box" id="cp-ins"><span class="cp-step">INSTRUCCIONES</span><h3>${esc(c.titulo)}</h3>
+            <p><strong>Objetivo:</strong> ${esc((ev && ev.objetivo) || "Objetivo pendiente de redacción por el profesor o el administrador.")}</p>
+            <p><strong>Tiempo estimado de duración:</strong> ${c.minutos} minutos.</p>
+            <p>Este curso contiene 3 secciones, favor visualizar en el orden establecido:</p><ol style="margin:6px 0 0 20px;font-size:13px;line-height:1.8"><li>Lectura de la política</li><li>Confirmación de lectura</li><li>Evaluación: calificación aprobatoria ${ev ? ev.aprobatoria : 80}%</li></ol></article>
+          <article class="cp-box" id="cp-lec"><span class="cp-step">SECCIÓN 1 ${p.lectura ? "· ✓ COMPLETADA" : ""}</span><h3>Lectura de la política</h3>
+            <p>El siguiente documento es la versión oficial de la política; favor leer a detalle. Dale clic a la actividad para descubrir su contenido.</p>${lecturaItems}${reg}
+            ${p.lectura || !mia ? "" : `<p class="um-note"><button class="um-btn" data-a="leido" ${r.lectura && vOk ? "" : "disabled"} style="${r.lectura && vOk ? "" : "opacity:.45;cursor:not-allowed"}">Marcar como leído</button> <small class="mut">${!r.lectura ? "Primero abre el documento." : !vOk ? "Primero mira el video completo." : ""}</small></p>`}</article>
+          <article class="cp-box" id="cp-con"><span class="cp-step">SECCIÓN 2 ${p.conf ? "· ✓ COMPLETADA" : ""}</span><h3>Confirmación de lectura</h3>
+            <p>En esta sección usted da fe que concluyó satisfactoriamente la lectura de <strong>${esc(c.titulo)}</strong>.</p>
+            <p>Al seleccionar la opción «SÍ» acepta el conocimiento de este documento y la responsabilidad de su aplicación en sus actividades laborales a partir de esta fecha.</p>${conf}</article>
+          <article class="cp-box" id="cp-eva"><span class="cp-step">SECCIÓN 3 ${p.eval ? "· ✓ APROBADA" : ""}</span><h3>Evaluación</h3>${evalu}</article>`;
+    }
+
+    /* ---------- evaluación (intento) ---------- */
+    const POR_PAG = 5;
+    function pintarQuiz() {
+        const q = quiz, n = q.ev.preguntas.length, pags = Math.ceil(n / POR_PAG), ini = q.pag * POR_PAG, L = "ABCDEFGH";
+        document.getElementById("cpMain").innerHTML = `<article class="cp-box"><span class="cp-step">INTENTO ${(rec().intentos || []).length + 1} DE ${D.INTENTOS}</span><h3>Evaluación: ${esc(c.titulo)}</h3>
+            <div class="cp-nav">${q.ev.preguntas.map((_, i) => `<button data-a="qir" data-i="${i}" class="${q.resp[i] !== null ? "on" : ""}">${i + 1}</button>`).join("")}</div>
+            ${q.ev.preguntas.slice(ini, ini + POR_PAG).map((p, k) => { const i = ini + k; return `<div class="cp-q"><small class="mut">Pregunta ${i + 1} · Puntaje 1.00</small><h4>${esc(p.q)}</h4>
+                ${p.op.map((o, j) => `<label class="${q.resp[i] === j ? "sel" : ""}"><input type="radio" name="q${i}" data-a="resp" data-i="${i}" data-j="${j}" ${q.resp[i] === j ? "checked" : ""}><span><strong>${L[j]}.</strong> ${esc(o)}</span></label>`).join("")}</div>`; }).join("")}
+            <div class="cp-tools" style="margin-top:14px">${q.pag > 0 ? '<button class="btn" data-a="qant">‹ Página anterior</button>' : ""}
+            ${q.pag < pags - 1 ? '<button class="btn red" data-a="qsig">Página siguiente ›</button>' : '<button class="btn red" data-a="qfin">Terminar intento…</button>'}
+            <button class="btn" data-a="qsalir" style="margin-left:auto">Salir sin terminar</button></div></article>`;
+    }
+    function terminar() {
+        const q = quiz, n = q.ev.preguntas.length, sin = q.resp.filter(r => r === null).length;
+        const m = UM.modal({ titulo: "Terminar intento", ancho: 420, html: `<p>${sin ? `Tienes <strong>${sin}</strong> pregunta(s) sin responder.` : "Respondiste todas las preguntas."} Una vez enviado, el intento no se puede modificar.</p>
+            <p class="um-note"><button class="um-btn" id="qEnv">Enviar todo y terminar</button> <button class="um-btn ghost" id="qCan">Volver</button></p>` });
+        m.el.querySelector("#qCan").addEventListener("click", m.cerrar);
+        m.el.querySelector("#qEnv").addEventListener("click", () => {
+            m.cerrar(); const ok = q.resp.filter((r, i) => r === q.ev.preguntas[i].ok).length, nota = Math.round(ok / n * 100);
+            D.registrarIntento(id, q.ini, nota); quiz = null; const aprob = nota >= D.PASA;
+            document.getElementById("cpMain").innerHTML = `<article class="cp-box cp-result"><span class="cp-step">RESULTADO DEL INTENTO</span><strong>${nota} / 100</strong>
+                <p>${aprob ? "✓ Aprobado. Has completado la evaluación." : "No alcanzaste la calificación aprobatoria (" + D.PASA + "%)."}</p><p class="mut">Revisión no permitida.</p>
+                <p class="um-note"><button class="um-btn" data-a="qsalir">Volver al curso</button></p></article>`;
+            cabecera(); indice();
+        });
+    }
+    function editarEvaluacion() {
+        let preg = JSON.parse(JSON.stringify((ev && ev.preguntas) || []));
+        const html = () => `<div class="cp-edit"><p class="mut" style="margin-bottom:8px">Marca la respuesta correcta de cada pregunta. Aprobatoria ${D.PASA}% · ${D.INTENTOS} intentos.</p>` +
+            preg.map((p, i) => `<div class="qrow"><strong>${i + 1}. ${esc(p.q)}</strong>${p.op.map((o, j) => `<label><input type="radio" name="k${i}" data-k="${i}" data-j="${j}" ${p.ok === j ? "checked" : ""}> ${esc(o)}</label>`).join("")}
+            <button class="um-btn ghost" data-del="${i}" style="margin-top:6px;padding:6px 10px">Quitar pregunta</button></div>`).join("") +
+            `<div class="qrow"><strong>Agregar pregunta</strong><textarea id="nq" placeholder="Texto de la pregunta"></textarea><textarea id="no" placeholder="Una opción por línea"></textarea>
+            <label>Número de la opción correcta (1, 2, 3…) <input id="nk" type="number" min="1" style="width:70px;margin-left:6px;padding:6px;border-radius:6px;background:#0c0c0f;color:#fff;border:1px solid #444"></label>
+            <button class="um-btn ghost" id="nadd" style="margin-top:6px">+ Añadir</button></div>
+            <p class="um-note"><button class="um-btn" id="nsave">Guardar evaluación</button></p></div>`;
+        const m = UM.modal({ titulo: "Editar evaluación", ancho: 720, html: html() });
+        const repintar = () => { m.el.querySelector(".um-modal-body").innerHTML = html(); };
+        m.el.addEventListener("change", e => { if (e.target.dataset.k !== undefined) preg[+e.target.dataset.k].ok = +e.target.dataset.j; });
+        m.el.addEventListener("click", e => {
+            if (e.target.dataset.del !== undefined) { preg.splice(+e.target.dataset.del, 1); repintar(); }
+            if (e.target.id === "nadd") { const q = m.el.querySelector("#nq").value.trim(), o = m.el.querySelector("#no").value.split("\n").map(x => x.trim()).filter(Boolean), k = +m.el.querySelector("#nk").value - 1;
+                if (!q || o.length < 2 || !(k >= 0 && k < o.length)) { UM.toast("Escribe la pregunta, al menos 2 opciones y la correcta"); return; } preg.push({ q, op: o, ok: k }); repintar(); }
+            if (e.target.id === "nsave") { if (!preg.length) { UM.toast("Agrega al menos una pregunta"); return; }
+                D.guardarEvaluacion(id, { objetivo: ev && ev.objetivo, aprobatoria: D.PASA, intentos: D.INTENTOS, preguntas: preg }); ev = { ...(ev || {}), demo: false, preguntas: preg }; m.cerrar(); UM.toast("Evaluación guardada"); pintar(); }
+        });
+    }
+
+    /* ---------- otras pestañas ---------- */
+    const tabla = (cab, filas, tid) => `<div class="cp-wrap"><table id="${tid || ""}"><thead><tr>${cab.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${filas.map(f => `<tr>${f.map(v => `<td>${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    const expBtns = () => staff && UM.puede("reportes") ? `<button class="btn" data-a="exp" data-f="csv">⇩ CSV</button><button class="btn" data-a="exp" data-f="xlsx">⇩ Excel</button><button class="btn" data-a="exp" data-f="pdf">⇩ PDF</button>` : "";
+    const repMatriz = () => [[...D.COLS_REPORTE, "Estado"], ...D.reporteCurso(id).map(r => [...D.filaReporte(r), r.estado])];
+
+    function vistaParticipantes() {
+        const rows = D.reporteCurso(id), cab = ["Nombre", "Apellido", "Departamento", "Puesto", "Ubicación", "Estado"]; if (staff) cab.push("");
+        return `<article class="cp-box"><div class="cp-tools"><input type="search" id="cpBuscar" placeholder="Buscar participante…"><span class="mut" style="font-size:12px">${rows.length} participantes</span>
+            ${staff ? '<button class="btn red" data-a="inscr">+ Inscribir usuarios</button>' : ""}${expBtns()}</div>` +
+            tabla(cab, rows.map(r => { const f = [esc(r.u.nombre), esc(r.u.apellido), esc(r.u.departamento), esc(r.u.puesto), esc(r.u.ubicacion), r.estado];
+                if (staff) f.push(`<button class="cp-link" data-a="quitar" data-u="${r.u.id}">Quitar</button>`); return f; }), "tPart") + "</article>";
+    }
+    function inscribirUsuarios() {
+        const ya = new Set(D.reporteCurso(id).map(r => r.u.id));
+        const base = window.UMUsers.list().filter(u => u.rol === "estudiante" && u.activo && !ya.has(u.id) && (u.pais || "NI") === c.pais), sel = new Set();
+        const opts = k => [...new Set(base.map(u => u[k]))].sort().map(v => `<option>${esc(v)}</option>`).join("");
+        const m = UM.modal({ titulo: "Inscribir usuarios en este curso", ancho: 680, html: `<div class="cp-tools"><input id="inQ" placeholder="Buscar por nombre, cédula o usuario…">
+            <select id="inDep"><option value="">Departamento</option>${opts("departamento")}</select><select id="inUb"><option value="">Ubicación</option>${opts("ubicacion")}</select>
+            <select id="inReg"><option value="">Regional</option>${opts("regional")}</select></div>
+            <label style="display:flex;gap:8px;align-items:center;font-size:12px;margin-bottom:8px"><input type="checkbox" id="inTodos"> Seleccionar todos los que coinciden con el filtro (<span id="inN">0</span>)</label>
+            <div id="inLista" style="max-height:300px;overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:8px"></div>
+            <p class="um-note"><button class="um-btn" id="inOk">Inscribir (<span id="inC">0</span>)</button></p>` });
+        const q = id2 => m.el.querySelector(id2), norm = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const filtrados = () => { const t = norm(q("#inQ").value.trim()), d = q("#inDep").value, u = q("#inUb").value, r = q("#inReg").value;
+            return base.filter(x => (!t || norm([x.nombre, x.apellido, x.cedula, x.usuario].join(" ")).includes(t)) && (!d || x.departamento === d) && (!u || x.ubicacion === u) && (!r || x.regional === r)); };
+        const pintarIn = () => { const f = filtrados(); q("#inN").textContent = f.length; q("#inC").textContent = sel.size;
+            q("#inLista").innerHTML = f.slice(0, 80).map(x => `<label style="display:flex;gap:10px;align-items:center;padding:8px 12px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;cursor:pointer">
+                <input type="checkbox" data-u="${x.id}" ${sel.has(x.id) ? "checked" : ""}><span><strong>${esc(x.nombre)} ${esc(x.apellido)}</strong> · ${esc(x.cedula)}<br><small style="color:#c6c6cf">${esc(x.departamento)} · ${esc(x.puesto)} · ${esc(x.ubicacion)}</small></span></label>`).join("") || '<p style="padding:16px;color:#c6c6cf">No hay usuarios disponibles con ese filtro.</p>'; };
+        m.el.addEventListener("input", e => { if (["inQ", "inDep", "inUb", "inReg"].includes(e.target.id)) pintarIn(); });
+        m.el.addEventListener("change", e => { if (e.target.id === "inTodos") { filtrados().forEach(x => e.target.checked ? sel.add(x.id) : sel.delete(x.id)); pintarIn(); }
+            else if (e.target.dataset.u) { e.target.checked ? sel.add(+e.target.dataset.u) : sel.delete(+e.target.dataset.u); q("#inC").textContent = sel.size; } });
+        q("#inOk").addEventListener("click", () => { if (!sel.size) { UM.toast("Selecciona al menos un usuario"); return; } sel.forEach(u => D.inscribirUsuario(u, id)); m.cerrar(); UM.toast(sel.size + " usuario(s) inscritos"); pintar(); });
+        pintarIn();
+    }
+    function vistaNotas() {
+        if (staff) { const rows = D.reporteCurso(id), ov = D.notas(id);
+            return `<article class="cp-box"><div class="cp-tools"><span class="mut" style="flex:1;font-size:12px">Escribe la nota (0–100) de cada participante. Se guarda al salir del campo. Aprobatoria: ${D.PASA}.</span>${expBtns()}</div>` +
+                tabla(["Nombre", "Apellido", "Cédula", "Estado", "Nota"], rows.map(r => [esc(r.u.nombre), esc(r.u.apellido), esc(r.u.cedula), r.estado,
+                    `<input class="cp-grade" type="number" min="0" max="100" data-u="${r.u.id}" value="${r.nota}" aria-label="Nota de ${esc(r.u.nombre)}">${ov[r.u.id] ? " ✎" : ""}`]), "tNotas") + "</article>"; }
+        const r = rec(), p = pasos();
+        return `<article class="cp-box"><h3>Mis calificaciones</h3>` + tabla(["Elemento", "Estado", "Fecha", "Calificación"], [
+            ["Lectura de la política", p.lectura ? "Completado" : "Pendiente", r.lectura && r.lectura.leida ? largo(r.lectura.leida) : "—", "—"],
+            ["Confirmación de lectura", p.conf ? "Completado" : "Pendiente", r.conf ? largo(r.conf.fecha) : "—", "—"],
+            ["Evaluación", p.eval ? "Aprobada" : (r.intentos || []).length ? "No aprobada" : "Pendiente", (r.intentos || []).length ? largo(r.intentos[r.intentos.length - 1].fin) : "—", D.mejor(id) === null ? "—" : D.mejor(id) + " / 100"]]) + "</article>";
+    }
+    function vistaActividades() {
+        const p = pasos(), r = rec();
+        return `<article class="cp-box"><h3>Actividades del curso</h3>` + tabla(["Actividad", "Tipo", "Estado"], [["Lectura de la política", "Lectura", p.lectura ? "✓ Completada" : r.lectura ? "Abierta" : "Pendiente"],
+            ["Confirmación de lectura", "Elección", p.conf ? "✓ Completada" : p.lectura ? "Disponible" : "🔒 No disponible"],
+            ["Evaluación", "Examen", p.eval ? "✓ Aprobada" : p.conf ? "Disponible" : "🔒 No disponible"]]) + "</article>";
+    }
+    function vistaCompetencias() {
+        const a = pct(), niv = [34, 67, 100];
+        return `<article class="cp-box"><h3>Competencias del curso</h3><p class="mut" style="margin-bottom:10px">Se van logrando según tu avance.</p>` +
+            D.competencias(c).map((t, k) => `<div class="cp-comp"><span class="cp-badge ${a >= niv[k] ? "ok" : ""}">${a >= niv[k] ? "LOGRADA" : "EN CURSO"}</span><span>${esc(t)}</span></div>`).join("") + "</article>";
+    }
+
+    function pintar() {
+        cabecera(); indice();
+        const v = { curso: vistaCurso, participantes: vistaParticipantes, calificaciones: vistaNotas, actividades: vistaActividades, competencias: vistaCompetencias }[tab];
+        document.getElementById("cpMain").innerHTML = (mia ? "" : `<div class="cp-aviso"><span>Vista de administración: no estás inscrito en este curso (solo lectura).</span></div>`) + v();
+        root.querySelectorAll(".cp-tabs > button[data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+    }
+
+    root.innerHTML = `<button class="cp-back" data-go="dashboard">← VOLVER A MIS CURSOS</button><div class="cp-head"></div>
+        <nav class="cp-tabs">${[["curso", "Curso"], ["participantes", "Participantes"], ["calificaciones", "Calificaciones"], ["actividades", "Actividades"], ["competencias", "Competencias"]]
+            .map(([k, l]) => `<button data-tab="${k}">${l}</button>`).join("")}<button data-a="mas">Más ▾</button>
+            <div class="cp-more" id="cpMas" hidden><button data-a="mats">Materiales del curso</button>${UM.puede("reportes") ? '<button data-a="rep">Reporte del curso</button>' : ""}<button data-go="evaluaciones">Evaluaciones</button><button data-a="cert">Descargar certificado</button></div></nav>
+        <div class="cp-layout"><aside class="cp-index"><div id="cpIndex"></div></aside><div class="cp-main" id="cpMain"></div></div>`;
+
+    const certificado = () => { if (pct() < 100) { UM.toast("Completa las 3 secciones para obtener el certificado"); return; }
+        window.UMExport.certificado({ nombre: UM.nombre, curso: c.titulo, fecha: UM.fecha(new Date(), { day: "2-digit", month: "2-digit", year: "numeric" }), empresa: c.empresa === "General" ? "Grupo Monge" : c.empresa }); };
+
+    const guardarVideo = p => { if (mia) D.video(id, p); };
+    function verVideo(f) {
+        const url = f.url || URL.createObjectURL(f.blob); let max = (rec().video || {}).max || 0;
+        const m = UM.modal({ titulo: f.titulo, ancho: 900, html: `<video src="${url}" controls controlsList="nodownload noplaybackrate" disablepictureinpicture style="width:100%;border-radius:8px;background:#000"></video>
+            <p class="um-note mut">Este video debe verse completo: no se puede adelantar.</p>` });
+        const v = m.el.querySelector("video");
+        v.addEventListener("loadedmetadata", () => { if (max && max < v.duration - 1) v.currentTime = max; });
+        v.addEventListener("timeupdate", () => { if (!v.seeking && v.currentTime > max) max = v.currentTime; });
+        v.addEventListener("seeking", () => { if (v.currentTime > max + .6) v.currentTime = max; });
+        v.addEventListener("ratechange", () => { v.playbackRate = 1; });
+        v.addEventListener("pause", () => guardarVideo({ max }));
+        v.addEventListener("ended", () => { guardarVideo({ max: v.duration, ok: true }); UM.toast("Video completado ✓"); m.cerrar(); pintar(); });
+    }
+
+    root.addEventListener("click", e => {
+        const t = e.target.closest("[data-tab]"); if (t) { quiz = null; tab = t.dataset.tab; document.getElementById("cpMas").hidden = true; pintar(); return; }
+        const b = e.target.closest("[data-a]"); if (!b || b.disabled) return; const a = b.dataset.a, find = () => mats.find(x => String(x.id) === b.dataset.m);
+        if (a === "indice") root.querySelector(".cp-layout").classList.toggle("sin-indice");
+        if (a === "subir") UM.subir({ ambito: "material", curso: id, onDone: recargar });
+        if (a === "cert") certificado();
+        if (a === "mas") document.getElementById("cpMas").hidden = !document.getElementById("cpMas").hidden;
+        if (a === "mats") UM.open("materiales", { curso: id });
+        if (a === "rep") UM.open("reportes", { curso: id });
+        if (a === "edev") editarEvaluacion();
+        if (a === "inscr") inscribirUsuarios();
+        if (a === "quitar") { D.desinscribirUsuario(+b.dataset.u, id); UM.toast("Usuario quitado del curso"); pintar(); }
+        if (a === "ir") { if (tab !== "curso" || quiz) { quiz = null; tab = "curso"; pintar(); } const el = document.getElementById("cp-" + b.dataset.t); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+        if (a === "doc") { if (mia) D.abrirLectura(id); const f = find(); if (f) UM.abrir(f); else UM.modal({ titulo: "Documento oficial", html: "<p>Aún no se cargó el archivo de este curso.</p><p class='um-note'>Un administrador o un profesor con permiso puede usar <strong>+ Agregar material</strong>. Tu apertura quedó registrada.</p>" }); pintar(); }
+        if (a === "video") { const f = find(); if (f) verVideo(f); }
+        if (a === "leido") { D.marcarLeido(id); UM.toast("Lectura registrada"); pintar(); }
+        if (a === "confirmar") { D.confirmar(id); UM.toast("Confirmación registrada"); pintar(); }
+        if (a === "iniciar") { quiz = { ev, ini: new Date().toISOString(), resp: Array(ev.preguntas.length).fill(null), pag: 0 }; pintarQuiz(); window.scrollTo({ top: 0 }); }
+        if (a === "qsig") { quiz.pag++; pintarQuiz(); window.scrollTo({ top: 0 }); }
+        if (a === "qant") { quiz.pag--; pintarQuiz(); window.scrollTo({ top: 0 }); }
+        if (a === "qir") { quiz.pag = Math.floor(+b.dataset.i / POR_PAG); pintarQuiz(); }
+        if (a === "qfin") terminar();
+        if (a === "qsalir") { quiz = null; pintar(); }
+        if (a === "exp") { const mtx = repMatriz(); window.UMExport[b.dataset.f](mtx, "reporte_" + c.codigo, { titulo: c.titulo.slice(0, 60), hoja: "Reporte" }); }
+    });
+    root.addEventListener("change", e => {
+        if (e.target.dataset.a === "resp") { quiz.resp[+e.target.dataset.i] = +e.target.dataset.j; pintarQuiz(); }
+        if (e.target.classList.contains("cp-grade")) { const v = e.target.value; if (v !== "" && (v < 0 || v > 100)) { UM.toast("La nota debe estar entre 0 y 100"); return; } D.ponerNota(id, +e.target.dataset.u, v); UM.toast("Nota guardada"); vistaNotasRefrescar(); }
+    });
+    const vistaNotasRefrescar = () => { const y = window.scrollY; pintar(); window.scrollTo({ top: y }); };
+    root.addEventListener("input", e => { if (e.target.id === "cpBuscar") { const q = e.target.value.toLowerCase(); document.querySelectorAll("#tPart tbody tr").forEach(r => r.hidden = !r.innerText.toLowerCase().includes(q)); } });
+    document.addEventListener("click", e => { const m = document.getElementById("cpMas"); if (m && !e.target.closest(".cp-tabs")) m.hidden = true; });
+
+    async function recargar() { mats = await UM.materiales(); pintar(); }
+    (async () => { ev = await D.evaluacion(id); await recargar(); })();
+})();
+</script>

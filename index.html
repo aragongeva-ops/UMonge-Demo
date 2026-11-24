@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#b5121b">
+<title>UMonge | Universidad Corporativa</title>
+
+<link rel="stylesheet" href="CSS/app.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">M</div>
+            <div>
+                <h2>UMONGE</h2>
+                <small>Universidad Corporativa</small>
+            </div>
+        </div>
+
+        <div class="nav-title">MENÚ PRINCIPAL</div>
+
+        <nav class="navigation">
+
+            <button class="active" data-page="portal" data-title="Inicio">
+                ◈ &nbsp; Inicio
+            </button>
+
+            <button data-page="dashboard" data-title="Mis cursos">
+                ★ &nbsp; Mis cursos
+            </button>
+
+            <button data-roles="admin" data-page="usuarios" data-title="Usuarios">
+                ◉ &nbsp; Usuarios
+            </button>
+
+            <button data-roles="admin,profesor" data-page="academias" data-title="Academias">
+                ▦ &nbsp; Academias
+            </button>
+
+            <button data-roles="admin,profesor" data-page="cursos" data-title="Catálogo de cursos">
+                ▤ &nbsp; Cursos
+            </button>
+
+            <button data-page="materiales" data-title="Materiales">
+                ▧ &nbsp; Materiales
+            </button>
+
+            <button data-page="actividades" data-title="Actividades">
+                ✓ &nbsp; Actividades
+            </button>
+
+            <button data-page="evaluaciones" data-title="Evaluaciones">
+                ☑ &nbsp; Evaluaciones
+            </button>
+
+            <button data-page="seguimiento" data-title="Seguimiento">
+                ◷ &nbsp; Seguimiento
+            </button>
+
+            <button data-page="calendario" data-title="Calendario">
+                ▦ &nbsp; Calendario
+            </button>
+
+            <button data-page="comunicados" data-title="Comunicados">
+                ◉ &nbsp; Comunicados
+            </button>
+
+            <button data-roles="admin,profesor" data-page="reportes" data-title="Reportes">
+                ▤ &nbsp; Reportes
+            </button>
+
+            <button data-roles="admin" data-page="administracion" data-title="Administración">
+                ⚙ &nbsp; Administración
+            </button>
+
+            <button data-page="configuracion" data-title="Configuración">
+                ⛭ &nbsp; Configuración
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            Grupo Monge<br>
+            Campus Nicaragua<br>
+            <span>UMonge · Versión inicial</span>
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+
+                <div class="breadcrumb">
+                    UMonge / <strong id="pageTitle">Inicio</strong>
+                </div>
+            </div>
+
+            <div class="top-right">
+                <button class="icon-top" id="bellBtn" data-go="comunicados" title="Comunicados" aria-label="Comunicados">🔔<span class="badge">2</span></button>
+                <button class="country" id="paisChip" title="Cambiar de administración">NICARAGUA</button>
+
+                <div class="user-menu" id="userMenu">
+                    <button class="avatar" id="avatarBtn" aria-haspopup="true" aria-expanded="false" title="Mi cuenta">US</button>
+                    <div class="user-dropdown" id="userDropdown" hidden>
+                        <div class="ud-head"><strong id="udName">Usuario</strong><small id="udRole">Colaborador · Nicaragua</small></div>
+                        <button data-go="perfil">Perfil</button>
+                        <button data-go="seguimiento">Calificaciones</button>
+                        <button data-go="calendario">Calendario</button>
+                        <button data-go="archivos">Archivos privados</button>
+                        <button data-go="reportes">Informes</button>
+                        <hr>
+                        <button data-go="configuracion">Preferencias</button>
+                        <button id="langBtn">Idioma</button>
+                        <button id="rolBtn">Cambiar rol (demostración)</button>
+                        <hr>
+                        <button id="logoutBtn">Cerrar sesión</button>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <section class="content" id="pageContent">
+            <div class="loading">Cargando UMonge...</div>
+        </section>
+
+        <footer class="app-footer">Universidad Monge · Grupo Monge · Nicaragua</footer>
+
+    </main>
+
+</div>
+
+<script src="js/catalogo.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

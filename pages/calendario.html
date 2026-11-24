@@ -1,0 +1,314 @@
+
+<style>
+.calendar-page {
+    color: var(--text,var(--text));
+    font-family: Inter,Arial,sans-serif;
+    width:100%;
+}
+.calendar-page * {box-sizing:border-box}
+.calendar-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:25px;
+}
+.calendar-header h1 {font-size:28px;margin:8px 0}
+.calendar-header p {font-size:13px;color:var(--muted)}
+.calendar-eyebrow {
+    color:#ef2b2b;font-size:11px;font-weight:800;
+    letter-spacing:1.5px;
+}
+.calendar-layout {
+    display:grid;
+    grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr);
+    gap:18px;
+}
+.calendar-panel,.calendar-side {
+    background:linear-gradient(145deg,var(--stat-from),var(--stat-to));
+    border:1px solid rgba(239,43,43,.3);
+    border-radius:15px;padding:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+    min-width:0;
+}
+.calendar-toolbar {
+    display:flex;justify-content:space-between;
+    align-items:center;gap:10px;margin-bottom:20px;
+}
+.calendar-toolbar h2 {font-size:17px}
+.calendar-toolbar button {
+    background:rgba(255,255,255,.08);
+    color:var(--text);border:1px solid var(--border);
+    border-radius:8px;padding:8px 12px;cursor:pointer;
+}
+.calendar-toolbar button:hover {background:#b5121b}
+.calendar-weekdays,.calendar-days {
+    display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:6px;
+}
+.calendar-weekdays {margin-bottom:8px}
+.calendar-weekdays span {
+    text-align:center;color:var(--muted);
+    font-size:10px;font-weight:700;padding:8px 0;
+}
+.calendar-day {
+    min-height:76px;border:1px solid rgba(255,255,255,.09);
+    background:rgba(255,255,255,.035);
+    border-radius:9px;color:var(--text);padding:9px 5px;
+    text-align:center;cursor:pointer;font-size:12px;
+}
+.calendar-day:hover,.calendar-day.selected {
+    border-color:#ef2b2b;background:rgba(217,0,0,.2);
+}
+.calendar-day.today {border-color:#ff6969}
+.calendar-day.muted-day {opacity:.35}
+.calendar-day .day-number {display:block;font-weight:700}
+.calendar-day .day-dot {
+    display:inline-block;width:6px;height:6px;
+    background:#ff5555;border-radius:50%;margin-top:9px;
+}
+.calendar-legend {
+    display:flex;gap:15px;flex-wrap:wrap;
+    margin-top:17px;color:var(--muted);font-size:11px;
+}
+.calendar-legend span {display:flex;align-items:center;gap:6px}
+.calendar-legend i {
+    width:8px;height:8px;background:#ff5555;border-radius:50%;
+}
+.calendar-side h2 {font-size:17px;margin-bottom:6px}
+.calendar-side .side-date {font-size:12px;color:var(--muted);margin-bottom:18px}
+.calendar-event {
+    padding:14px 12px;margin-bottom:10px;
+    background:rgba(255,255,255,.055);
+    border:1px solid var(--border);
+    border-left:3px solid #ef2b2b;border-radius:9px;
+}
+.calendar-event strong {display:block;font-size:12px;margin-bottom:6px;color:white}
+.calendar-event p {font-size:11px;color:var(--muted);line-height:1.5}
+.calendar-event small {display:block;color:#ff8585;font-size:10px;margin-top:7px}
+.calendar-empty {
+    color:var(--muted);font-size:12px;padding:20px 5px;
+    text-align:center;border:1px dashed var(--border);
+    border-radius:9px;
+}
+.calendar-summary {
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:12px;margin-bottom:20px;
+}
+.calendar-summary div {
+    background:linear-gradient(145deg,var(--stat-from),var(--stat-to));
+    border:1px solid rgba(239,43,43,.25);
+    padding:16px;border-radius:12px;
+}
+.calendar-summary span {display:block;font-size:11px;color:var(--muted)}
+.calendar-summary strong {display:block;font-size:24px;margin-top:8px;color:white}
+@media(max-width:850px) {
+    .calendar-layout {grid-template-columns:1fr}
+}
+@media(max-width:550px) {
+    .calendar-summary {grid-template-columns:1fr 1fr}
+    .calendar-panel,.calendar-side {padding:13px}
+    .calendar-day {min-height:55px;padding:7px 2px;font-size:11px}
+    .calendar-weekdays span {font-size:9px}
+    .calendar-header h1 {font-size:23px}
+}
+</style>
+
+<section class="calendar-page" id="calendarModule">
+
+    <div class="calendar-header">
+        <div>
+            <span class="calendar-eyebrow">CAMPUS NICARAGUA / ORGANIZACIÓN</span>
+            <h1>Calendario</h1>
+            <p>Consulta tus actividades, evaluaciones y fechas importantes de formación.</p>
+        </div>
+    </div>
+
+    <div class="calendar-summary">
+        <div>
+            <span>Actividades programadas</span>
+            <strong>04</strong>
+        </div>
+        <div>
+            <span>Evaluaciones</span>
+            <strong>02</strong>
+        </div>
+        <div>
+            <span>Próxima actividad</span>
+            <strong style="font-size:17px">20 NOV</strong>
+        </div>
+    </div>
+
+    <div class="calendar-layout">
+        <div class="calendar-panel">
+            <div class="calendar-toolbar">
+                <button type="button" id="calendarPrev">←</button>
+                <h2 id="calendarMonth">Mes</h2>
+                <button type="button" id="calendarNext">→</button>
+            </div>
+
+            <div class="calendar-weekdays">
+                <span>LUN</span><span>MAR</span><span>MIÉ</span>
+                <span>JUE</span><span>VIE</span><span>SÁB</span><span>DOM</span>
+            </div>
+
+            <div class="calendar-days" id="calendarDays"></div>
+
+            <div class="calendar-legend">
+                <span><i></i> Actividad programada</span>
+                <span><i style="background:#fff"></i> Día actual</span>
+            </div>
+        </div>
+
+        <aside class="calendar-side">
+            <h2>Agenda del día</h2>
+            <p class="side-date" id="calendarSelectedDate">Selecciona una fecha</p>
+            <div id="calendarEvents"></div>
+        </aside>
+    </div>
+
+</section>
+
+<script>
+(function(){
+    const root = document.getElementById("calendarModule");
+    if(!root) return;
+
+    const events = [
+        {
+            date:"2026-11-20",
+            title:"Entrega de actividad",
+            description:"Entrega de actividad del curso Servicio y atención al cliente.",
+            type:"Actividad",
+            time:"Todo el día"
+        },
+        {
+            date:"2026-11-24",
+            title:"Evaluación de conocimientos",
+            description:"Evaluación correspondiente a Política de Operaciones de Caja.",
+            type:"Evaluación",
+            time:"10:00 a. m."
+        },
+        {
+            date:"2026-11-27",
+            title:"Revisión de materiales",
+            description:"Consulta y revisión de los materiales asignados.",
+            type:"Formación",
+            time:"Todo el día"
+        },
+        {
+            date:"2026-12-02",
+            title:"Seguimiento de cursos",
+            description:"Revisión del avance de los cursos asignados.",
+            type:"Seguimiento",
+            time:"09:00 a. m."
+        }
+    ];
+
+    let current = new Date();
+    current.setDate(1);
+    let selected = new Date();
+
+    const daysBox = root.querySelector("#calendarDays");
+    const monthLabel = root.querySelector("#calendarMonth");
+    const dateLabel = root.querySelector("#calendarSelectedDate");
+    const eventBox = root.querySelector("#calendarEvents");
+
+    function dateKey(date){
+        return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+    }
+
+    function renderEvents(){
+        const key = dateKey(selected);
+        dateLabel.textContent = selected.toLocaleDateString("es-NI",{
+            weekday:"long",day:"numeric",month:"long",year:"numeric"
+        });
+
+        const found = events.filter(event=>event.date===key);
+
+        if(!found.length){
+            eventBox.innerHTML='<div class="calendar-empty">No hay actividades programadas para esta fecha.</div>';
+            return;
+        }
+
+        eventBox.innerHTML=found.map(event=>`
+            <div class="calendar-event">
+                <strong>${event.title}</strong>
+                <p>${event.description}</p>
+                <small>${event.type} · ${event.time}</small>
+            </div>
+        `).join("");
+    }
+
+    function renderCalendar(){
+        const year=current.getFullYear();
+        const month=current.getMonth();
+        monthLabel.textContent=current.toLocaleDateString("es-NI",{month:"long",year:"numeric"});
+
+        const firstDay=new Date(year,month,1);
+        const offset=(firstDay.getDay()+6)%7;
+        const total=new Date(year,month+1,0).getDate();
+        const previousTotal=new Date(year,month,0).getDate();
+        const todayKey=dateKey(new Date());
+
+        let html="";
+
+        for(let i=0;i<42;i++){
+            let day, date, muted=false;
+
+            if(i<offset){
+                day=previousTotal-offset+i+1;
+                date=new Date(year,month-1,day);
+                muted=true;
+            }else if(i>=offset+total){
+                day=i-offset-total+1;
+                date=new Date(year,month+1,day);
+                muted=true;
+            }else{
+                day=i-offset+1;
+                date=new Date(year,month,day);
+            }
+
+            const key=dateKey(date);
+            const hasEvent=events.some(event=>event.date===key);
+            const isToday=key===todayKey;
+            const isSelected=key===dateKey(selected);
+
+            html+=`
+                <button type="button"
+                    class="calendar-day ${muted?"muted-day":""} ${isToday?"today":""} ${isSelected?"selected":""}"
+                    data-date="${key}">
+                    <span class="day-number">${day}</span>
+                    ${hasEvent?'<span class="day-dot"></span>':""}
+                </button>
+            `;
+        }
+
+        daysBox.innerHTML=html;
+
+        daysBox.querySelectorAll("[data-date]").forEach(button=>{
+            button.addEventListener("click",()=>{
+                const parts=button.dataset.date.split("-").map(Number);
+                selected=new Date(parts[0],parts[1]-1,parts[2]);
+                current=new Date(parts[0],parts[1]-1,1);
+                renderCalendar();
+                renderEvents();
+            });
+        });
+    }
+
+    root.querySelector("#calendarPrev").addEventListener("click",()=>{
+        current.setMonth(current.getMonth()-1);
+        renderCalendar();
+    });
+
+    root.querySelector("#calendarNext").addEventListener("click",()=>{
+        current.setMonth(current.getMonth()+1);
+        renderCalendar();
+    });
+
+    renderCalendar();
+    renderEvents();
+})();
+</script>

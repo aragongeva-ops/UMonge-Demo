@@ -1,0 +1,436 @@
+<style>
+/* ===== Reportes académicos · UMonge ===== */
+.rp { --pn: linear-gradient(145deg, #3a3a44, #202028); }
+[data-theme="dark"] .rp { --pn: linear-gradient(145deg, #262629, #141417); }
+
+.rp-head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:22px; }
+.rp-eyebrow { color:#ef2b2b; font-size:11px; font-weight:800; letter-spacing:1.5px; }
+.rp-head h1 { font-size:28px; margin:8px 0 6px; }
+.rp-head p { font-size:13px; }
+.rp-actions { display:flex; gap:8px; flex-wrap:wrap; position:relative; }
+
+.rp .btn { padding:10px 14px; border-radius:9px; border:1px solid rgba(255,255,255,.16); background:rgba(30,30,36,.75);
+    color:#f4f2f2; font-size:12px; font-weight:600; cursor:pointer; }
+.rp .btn:hover { border-color:#ef2b2b; }
+.rp .btn.red { background:linear-gradient(110deg,#b5121b,#ef2b2b); border-color:transparent; }
+
+.rp-card { background:var(--pn); border:1px solid rgba(255,255,255,.14); border-radius:14px; padding:18px;
+    box-shadow:0 12px 28px rgba(0,0,0,.28); color:#f4f2f2; }
+.rp .rp-card :is(h2,h3,strong,b,label,th,td,span,small,p,div) { color:inherit; }
+.rp .rp-card small, .rp .rp-card .mut { color:#c6c6cf; }
+.rp-card h2 { font-size:15px; margin-bottom:4px; }
+.rp-card .sub { font-size:11px; color:#c6c6cf; margin-bottom:14px; }
+
+/* KPIs */
+.rp-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:18px; }
+.rp-kpi { position:relative; overflow:hidden; padding:16px; box-shadow:inset 0 3px 0 #ef2b2b, 0 12px 28px rgba(0,0,0,.28); }
+.rp-kpi span { display:block; font-size:11px; color:#c6c6cf; }
+.rp-kpi strong { display:block; font-size:26px; margin:8px 0 2px; }
+.rp-kpi small { font-size:10px; }
+
+/* Filtros */
+.rp-filters summary { cursor:pointer; font-weight:700; font-size:14px; list-style:none; display:flex; justify-content:space-between; }
+.rp-filters summary::after { content:"▾"; }
+.rp-fgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; margin-top:16px; }
+.rp-fgrid label { display:flex; flex-direction:column; gap:5px; font-size:11px; color:#c6c6cf; }
+.rp input, .rp select { width:100%; padding:10px; border-radius:8px; font-size:12px; font-family:inherit;
+    background:rgba(12,12,15,.65); border:1px solid rgba(255,255,255,.16); color:#f4f2f2; }
+.rp input:focus, .rp select:focus { outline:none; border-color:#ef2b2b; }
+.rp-ffoot { display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:12px; gap:10px; flex-wrap:wrap; }
+
+/* Gráficos */
+.rp-charts { display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:14px; margin:18px 0; }
+.rp-bar { display:grid; grid-template-columns:minmax(90px,38%) 1fr 44px; gap:8px; align-items:center; font-size:11px; margin-bottom:9px; }
+.rp-bar span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rp-bar div { height:8px; background:rgba(255,255,255,.12); border-radius:6px; overflow:hidden; }
+.rp-bar i { display:block; height:100%; background:linear-gradient(90deg,#b5121b,#ff6b6b); border-radius:6px; transition:width .5s ease; }
+.rp-bar b { text-align:right; }
+.rp-cols { display:flex; align-items:flex-end; gap:10px; height:150px; }
+.rp-cols div { flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; height:100%; font-size:10px; gap:5px; }
+.rp-cols i { width:100%; max-width:38px; background:linear-gradient(180deg,#ff6b6b,#b5121b); border-radius:6px 6px 0 0; min-height:3px; transition:height .5s ease; }
+.rp-donut-wrap { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+.rp-donut { width:130px; height:130px; border-radius:50%; display:grid; place-items:center; }
+.rp-donut::before { content:""; grid-area:1/1; width:84px; height:84px; border-radius:50%; background:#1b1b20; }
+.rp-donut b { grid-area:1/1; font-size:20px; z-index:1; }
+.rp-leg div { display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:8px; }
+.rp-leg i { width:10px; height:10px; border-radius:3px; display:inline-block; }
+.rp-line text { fill:#c6c6cf; font-size:8px; }
+
+/* Tabla */
+.rp-tbar { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+.rp-tbar > div { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.rp-tbar select { width:auto; }
+.rp-wrap { overflow-x:auto; border-radius:10px; border:1px solid rgba(255,255,255,.1); }
+.rp table { width:100%; border-collapse:collapse; font-size:12px; min-width:1500px; }
+.rp th { text-align:left; padding:12px 10px; background:rgba(12,12,15,.85); cursor:pointer; white-space:nowrap;
+    font-size:11px; letter-spacing:.3px; user-select:none; }
+.rp th:hover { background:rgba(120,15,22,.7); }
+.rp td { padding:11px 10px; border-top:1px solid rgba(255,255,255,.07); white-space:nowrap; }
+.rp tbody tr:hover { background:rgba(255,255,255,.06); }
+.rp .st { padding:4px 9px; border-radius:20px; font-size:10px; font-weight:700; }
+.rp .st-Activo { background:rgba(80,140,255,.2); color:#9cc0ff; }
+.rp .st-En { background:rgba(240,180,60,.2); color:#ffd27a; }
+.rp .st-Finalizado { background:rgba(50,190,110,.2); color:#7be2a8; }
+.rp .st-Reprobado { background:rgba(239,43,43,.22); color:#ff8f8f; }
+.rp-mini { display:inline-block; width:70px; height:6px; background:rgba(255,255,255,.14); border-radius:5px; vertical-align:middle; margin-right:6px; overflow:hidden; }
+.rp-mini i { display:block; height:100%; background:#ef2b2b; }
+.rp-pag { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:14px; font-size:12px; }
+.rp-pag div { display:flex; gap:5px; }
+.rp-pag button { min-width:32px; padding:7px 9px; }
+.rp-pag button.on { background:linear-gradient(110deg,#b5121b,#ef2b2b); border-color:transparent; }
+.rp-pag button:disabled { opacity:.4; cursor:default; }
+.rp-empty { text-align:center; padding:30px; color:#c6c6cf; }
+
+.rp-tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.rp-tabs button { padding: 12px 18px; background: none; border: 0; border-bottom: 3px solid transparent; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--muted); }
+.rp-tabs button.on { color: var(--text); border-bottom-color: #ef2b2b; }
+.rp .st-Completado { background: rgba(50,190,110,.2); color: #7be2a8; } .rp .st-Pendiente { background: rgba(240,180,60,.2); color: #ffd27a; }
+.rp .st-Sin { background: rgba(160,160,175,.2); color: #cfcfd6; }
+/* Menú de columnas */
+.rp-pop { position:absolute; right:0; top:46px; z-index:15; min-width:230px; display:none; }
+.rp-pop.open { display:block; }
+.rp-pop label { display:flex; gap:8px; align-items:center; font-size:12px; padding:5px 0; }
+.rp-pop input { width:auto; }
+
+@media (max-width:640px) { .rp-bar { grid-template-columns:90px 1fr 38px; } .rp-head h1 { font-size:23px; } }
+
+@media print {
+    .sidebar, .topbar, .rp-actions, .rp-filters, .rp-pag, .rp-tbar select, .rp-charts { display:none !important; }
+    body { background:#fff !important; } .content { padding:0 !important; }
+    .rp-card { background:#fff !important; color:#000 !important; box-shadow:none !important; border:1px solid #bbb !important; backdrop-filter:none; }
+    .rp .rp-card * { color:#000 !important; }
+    .rp table { min-width:0; font-size:9px; } .rp th { background:#eee !important; } .rp-wrap { overflow:visible; }
+}
+</style>
+
+<div class="rp-tabs"><button class="on" data-m="res">Resumen académico</button><button data-m="cur">Reporte por curso</button></div>
+
+<section class="rp" id="rpModule">
+
+    <div class="rp-head">
+        <div>
+            <span class="rp-eyebrow">UNIVERSIDAD MONGE / ANÁLISIS ACADÉMICO</span>
+            <h1>Reportes académicos</h1>
+            <p>Seguimiento del aprendizaje, desempeño y finalización de capacitaciones. <em>Datos de demostración.</em></p>
+        </div>
+        <div class="rp-actions">
+            <button class="btn" data-act="cols">▦ Columnas</button>
+            <button class="btn" data-act="csv">⇩ CSV</button>
+            <button class="btn" data-act="xls">⇩ Excel (.xlsx)</button>
+            <button class="btn" data-act="pdf">⇩ PDF</button>
+            <button class="btn" data-act="print">⎙ Imprimir</button>
+            <button class="btn red" data-act="custom">★ Reporte personalizado</button>
+            <div class="rp-card rp-pop" id="rpCols"></div>
+        </div>
+    </div>
+
+    <div class="rp-kpis" id="rpKpis"></div>
+
+    <details class="rp-card rp-filters" open>
+        <summary>Búsqueda avanzada</summary>
+        <div class="rp-fgrid" id="rpFilters"></div>
+        <div class="rp-ffoot">
+            <span id="rpCount" class="mut"></span>
+            <button class="btn" data-act="reset">Limpiar filtros</button>
+        </div>
+    </details>
+
+    <div class="rp-charts">
+        <div class="rp-card"><h2>Cursos más cursados</h2><p class="sub">Matrículas por curso</p><div id="chCursos"></div></div>
+        <div class="rp-card"><h2>Finalizaciones por facultad</h2><p class="sub">Cursos finalizados</p><div id="chFac"></div></div>
+        <div class="rp-card"><h2>Rendimiento por carrera</h2><p class="sub">Promedio de calificación</p><div id="chCarrera"></div></div>
+        <div class="rp-card"><h2>Estudiantes activos por sede</h2><p class="sub">Activos o en progreso</p><div id="chSede"></div></div>
+        <div class="rp-card"><h2>Promedio de notas por curso</h2><p class="sub">Escala 0–100</p><div id="chNotas"></div></div>
+        <div class="rp-card"><h2>Tendencia mensual de matrículas</h2><p class="sub">Matrículas por mes de inicio</p><div id="chTend"></div></div>
+        <div class="rp-card"><h2>Aprobación y reprobación</h2><p class="sub">Sobre cursos evaluados (nota mínima 70)</p><div id="chApro"></div></div>
+    </div>
+
+    <div class="rp-card">
+        <div class="rp-tbar">
+            <div><h2>Detalle por estudiante</h2></div>
+            <div>
+                <span class="mut" style="font-size:12px">Filas por página</span>
+                <select id="rpSize"><option>10</option><option>25</option><option>50</option></select>
+            </div>
+        </div>
+        <div class="rp-wrap"><table><thead id="rpHead"></thead><tbody id="rpBody"></tbody></table></div>
+        <div class="rp-pag"><span id="rpInfo" class="mut"></span><div id="rpPages"></div></div>
+    </div>
+</section>
+
+<script>
+(function () {
+    /* ---------- 1. DATOS DE DEMOSTRACIÓN (reemplazar por GET /api/v1/reportes/matriculas) ---------- */
+    const seed = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    const rnd = seed(2026), pick = a => a[Math.floor(rnd() * a.length)], int = (a, b) => a + Math.floor(rnd() * (b - a + 1));
+
+    const FAC = { "GMG Comercial": ["Ventas y Tiendas", "Logística y CEDI"], "GMG Servicios": ["Crédito y Cobros", "Talento Humano"],
+                  "GMG Zona Franca": ["Operaciones ZF", "Administración ZF"], "Transversal": ["Cumplimiento y Ética"] };
+    const CURSOS = [ // [curso, categoría, horas, facultad]
+        ["Código de ética", "Cumplimiento", 2, "Transversal"], ["Prevención de Lavado de Activos", "Cumplimiento", 4, "Transversal"],
+        ["Prevención de Fraude", "Cumplimiento", 2, "Transversal"], ["Seguridad de la Información 2026", "Seguridad", 3, "Transversal"],
+        ["Reglamento Interno de Trabajo 2026", "Normativa", 3, "Transversal"], ["Inducción Nuevos Ingresos 2026", "Onboarding", 3, "Transversal"],
+        ["Operaciones de Caja", "Operaciones", 4, "GMG Comercial"], ["Pasos de la Venta", "Ventas", 5, "GMG Comercial"],
+        ["Toma Física de Inventario en PDV", "Logística", 4, "GMG Comercial"], ["Manual de Procedimientos de Crédito", "Crédito", 6, "GMG Servicios"],
+        ["Atención al Usuario", "Servicio", 3, "GMG Servicios"], ["Marco Regulatorio CONAMI", "Regulatorio", 2, "GMG Servicios"],
+        ["Política de Control de Acceso ZF", "Operaciones", 2, "GMG Zona Franca"], ["Política de Vacaciones ZF", "Talento Humano", 2, "GMG Zona Franca"] ];
+    const SEDES = ["Managua", "León", "Chinandega", "Masaya", "Estelí", "Granada"];
+    const DOC = ["Ana Lorío", "Marvin Sandoval", "Karla Obando", "Luis Téllez", "Marta Rizo", "Josué Pineda"];
+    const NOM = ["Carlos", "María", "José", "Ana", "Luis", "Karla", "Marvin", "Elena", "Jorge", "Sofía", "Daniel", "Lucía", "Pedro", "Valeria", "Mario", "Daniela"];
+    const APE = ["Mendoza", "López", "Rodríguez", "Castillo", "Pérez", "Gutiérrez", "Ramírez", "Flores", "Sánchez", "Obando", "Chávez", "Navarro", "Zeledón", "Aguilar", "Blandón", "Medina"];
+    const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const iso = d => d.toISOString().slice(0, 10);
+
+    const DATA = [];
+    for (let i = 0; i < 44; i++) {
+        const n = NOM[i % 16], a1 = APE[(i * 7) % 16], a2 = APE[(i * 3 + 5) % 16];
+        const fac = pick(Object.keys(FAC).slice(0, 3)), carrera = pick(FAC[fac]), sede = pick(SEDES);
+        const mine = CURSOS.filter(c => c[3] === fac || c[3] === "Transversal");
+        const taken = new Set();
+        for (let k = 0, m = int(2, 4); k < m; k++) {
+            const c = pick(mine); if (taken.has(c[0])) continue; taken.add(c[0]);
+            const r = rnd(), start = new Date(Date.UTC(2026, 0, 5) + int(0, 300) * 864e5);
+            let estado, avance, nota = null, fin = null;
+            if (r < .38) { estado = "Finalizado"; avance = 100; nota = int(70, 100); }
+            else if (r < .50) { estado = "Reprobado"; avance = 100; nota = int(40, 69); }
+            else if (r < .80) { estado = "En progreso"; avance = int(20, 95); }
+            else { estado = "Activo"; avance = int(0, 15); }
+            if (avance === 100) fin = iso(new Date(+start + int(7, 40) * 864e5));
+            DATA.push({ nombre: `${n} ${a1} ${a2}`, ident: `ID-${String(1000 + i).padStart(5, "0")}`,
+                correo: `${norm(n)}.${norm(a1)}@grupomonge.com`, facultad: fac, carrera, curso: c[0], categoria: c[1],
+                sede, docente: pick(DOC), horas: c[2], estado, nota, avance, inicio: iso(start), fin });
+        }
+    }
+
+    /* ---------- 2. CONFIGURACIÓN DE COLUMNAS Y FILTROS ---------- */
+    const fd = s => s ? s.split("-").reverse().join("/") : "—";
+    const COLS = [
+        ["nombre", "Nombre completo"], ["ident", "Identificación"], ["correo", "Correo"], ["facultad", "Facultad"],
+        ["carrera", "Carrera"], ["curso", "Curso"], ["categoria", "Categoría"], ["docente", "Docente"],
+        ["horas", "Duración", r => r.horas + " h"], ["estado", "Estado", r => `<span class="st st-${r.estado.split(" ")[0]}">${r.estado}</span>`],
+        ["nota", "Calificación", r => r.nota ?? "—"],
+        ["avance", "Avance", r => `<span class="rp-mini"><i style="width:${r.avance}%"></i></span>${r.avance}%`],
+        ["inicio", "Inicio", r => fd(r.inicio)], ["fin", "Finalización", r => fd(r.fin)] ];
+    const visible = new Set(COLS.map(c => c[0]));
+    const FILTERS = [["nombre", "Nombre del estudiante", "text"], ["ident", "Número de identificación", "text"], ["correo", "Correo institucional", "text"],
+        ["facultad", "Facultad o área académica", "sel"], ["carrera", "Carrera o programa", "sel"], ["curso", "Asignatura o curso", "sel"],
+        ["categoria", "Categoría académica", "sel"], ["sede", "Campus o sede", "sel"], ["docente", "Docente", "sel"], ["estado", "Estado", "sel"],
+        ["desde", "Fecha de inicio desde", "date"], ["hasta", "Fecha de inicio hasta", "date"],
+        ["notaMin", "Calificación mínima", "number"], ["notaMax", "Calificación máxima", "number"]];
+
+    const $ = id => document.getElementById(id), root = $("rpModule");
+    const uniq = k => [...new Set(DATA.map(r => r[k]))].sort();
+    const state = { f: {}, sort: ["nombre", 1], page: 1, size: 10 };
+
+    /* ---------- 3. CONSTRUCCIÓN DE FILTROS ---------- */
+    $("rpFilters").innerHTML = `<label style="grid-column:1/-1">Búsqueda rápida (nombre, ID, correo o curso)
+        <input data-f="q" placeholder="Escribe para filtrar en tiempo real…"></label>` +
+        FILTERS.map(([k, l, t]) => t === "sel"
+            ? `<label>${l}<select data-f="${k}"><option value="">Todos</option>${uniq(k).map(v => `<option>${v}</option>`).join("")}</select></label>`
+            : `<label>${l}<input data-f="${k}" type="${t}" ${t === "number" ? 'min="0" max="100"' : ""}></label>`).join("");
+
+    $("rpFilters").addEventListener("input", e => { const k = e.target.dataset.f; if (!k) return; state.f[k] = e.target.value.trim(); state.page = 1; render(); });
+
+    /* ---------- 4. FILTRADO, ORDEN Y MÉTRICAS ---------- */
+    const filtered = () => {
+        const f = state.f, has = (v, q) => norm(String(v)).includes(norm(q));
+        const rows = DATA.filter(r =>
+            (!f.q || [r.nombre, r.ident, r.correo, r.curso].some(v => has(v, f.q))) &&
+            (!f.nombre || has(r.nombre, f.nombre)) && (!f.ident || has(r.ident, f.ident)) && (!f.correo || has(r.correo, f.correo)) &&
+            ["facultad", "carrera", "curso", "categoria", "sede", "docente", "estado"].every(k => !f[k] || r[k] === f[k]) &&
+            (!f.desde || r.inicio >= f.desde) && (!f.hasta || r.inicio <= f.hasta) &&
+            (!f.notaMin || (r.nota != null && r.nota >= +f.notaMin)) &&
+            (!f.notaMax || (r.nota != null && r.nota <= +f.notaMax)));
+        const [k, d] = state.sort;
+        return rows.sort((a, b) => ((a[k] ?? -1) > (b[k] ?? -1) ? 1 : (a[k] ?? -1) < (b[k] ?? -1) ? -1 : 0) * d);
+    };
+    const count = (rows, k) => { const m = {}; rows.forEach(r => m[r[k]] = (m[r[k]] || 0) + 1); return m; };
+    const avgBy = (rows, k) => { const s = {}, n = {}; rows.filter(r => r.nota != null).forEach(r => { s[r[k]] = (s[r[k]] || 0) + r.nota; n[r[k]] = (n[r[k]] || 0) + 1; });
+        return Object.keys(s).map(x => [x, +(s[x] / n[x]).toFixed(1)]); };
+    const top = (pairs, n) => pairs.sort((a, b) => b[1] - a[1]).slice(0, n);
+    const uniqueBy = (rows, fn) => new Set(rows.filter(fn).map(r => r.ident)).size;
+
+    /* ---------- 5. RENDER ---------- */
+    const bars = (el, pairs, max, suf = "") => $(el).innerHTML = pairs.length ? pairs.map(([k, v]) =>
+        `<div class="rp-bar"><span title="${k}">${k}</span><div><i style="width:${max ? v / max * 100 : 0}%"></i></div><b>${v}${suf}</b></div>`).join("")
+        : '<div class="rp-empty">Sin datos</div>';
+
+    function kpis(rows) {
+        const graded = rows.filter(r => r.nota != null), fin = rows.filter(r => r.estado === "Finalizado").length;
+        const pending = r => ["Activo", "En progreso"].includes(r.estado);
+        const hrs = Math.round(rows.reduce((s, r) => s + r.horas * r.avance / 100, 0));
+        const K = [["Estudiantes matriculados", uniqueBy(rows, () => true), "Personas únicas"],
+            ["Estudiantes activos", uniqueBy(rows, pending), "Activos o en progreso"],
+            ["Finalizaron cursos", uniqueBy(rows, r => r.estado === "Finalizado"), "Con al menos un curso"],
+            ["Con cursos pendientes", uniqueBy(rows, pending), "Por completar"],
+            ["Promedio general", graded.length ? (graded.reduce((s, r) => s + r.nota, 0) / graded.length).toFixed(1) : "—", "Escala 0–100"],
+            ["Tasa de finalización", rows.length ? Math.round(fin / rows.length * 100) + "%" : "—", `${fin} de ${rows.length} matrículas`],
+            ["Horas acumuladas", hrs.toLocaleString("es-NI") + " h", "Según avance real"]];
+        $("rpKpis").innerHTML = K.map(([l, v, s]) => `<div class="rp-card rp-kpi"><span>${l}</span><strong>${v}</strong><small>${s}</small></div>`).join("");
+    }
+
+    function charts(rows) {
+        const cur = count(rows, "curso"); bars("chCursos", top(Object.entries(cur), 6), Math.max(0, ...Object.values(cur)));
+        const fin = count(rows.filter(r => r.estado === "Finalizado"), "facultad"); bars("chFac", top(Object.entries(fin), 6), Math.max(0, ...Object.values(fin)));
+        bars("chCarrera", top(avgBy(rows, "carrera"), 7), 100); bars("chNotas", top(avgBy(rows, "curso"), 7), 100);
+
+        const act = {}; rows.filter(r => ["Activo", "En progreso"].includes(r.estado)).forEach(r => (act[r.sede] ??= new Set()).add(r.ident));
+        const sv = SEDES.map(s => [s, act[s] ? act[s].size : 0]), mx = Math.max(1, ...sv.map(x => x[1]));
+        $("chSede").innerHTML = `<div class="rp-cols">${sv.map(([s, v]) => `<div title="${s}: ${v}"><b>${v}</b><i style="height:${v / mx * 100}%"></i><span>${s}</span></div>`).join("")}</div>`;
+
+        const M = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"], mm = Array(12).fill(0);
+        rows.forEach(r => mm[+r.inicio.slice(5, 7) - 1]++); const my = Math.max(1, ...mm);
+        const pts = mm.map((v, i) => [10 + i * 25.5, 90 - v / my * 70]), line = pts.map(p => p.join(",")).join(" ");
+        $("chTend").innerHTML = `<svg class="rp-line" viewBox="0 0 300 115" width="100%"><defs><linearGradient id="rpG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ef2b2b" stop-opacity=".5"/><stop offset="1" stop-color="#ef2b2b" stop-opacity="0"/></linearGradient></defs>
+            <polygon fill="url(#rpG)" points="10,90 ${line} 290.5,90"/><polyline fill="none" stroke="#ff6b6b" stroke-width="2" points="${line}"/>
+            ${pts.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#ff6b6b"><title>${M[i]}: ${mm[i]}</title></circle><text x="${p[0]}" y="106" text-anchor="middle">${M[i]}</text>`).join("")}</svg>`;
+
+        const ev = rows.filter(r => r.nota != null), ap = ev.filter(r => r.nota >= 70).length, pct = ev.length ? Math.round(ap / ev.length * 100) : 0;
+        $("chApro").innerHTML = `<div class="rp-donut-wrap"><div class="rp-donut" style="background:conic-gradient(#3fbf7f 0 ${pct}%,#ef2b2b 0)"><b>${ev.length ? pct + "%" : "—"}</b></div>
+            <div class="rp-leg"><div><i style="background:#3fbf7f"></i>Aprobados: ${ap}</div><div><i style="background:#ef2b2b"></i>Reprobados: ${ev.length - ap}</div></div></div>`;
+    }
+
+    function table(rows) {
+        const cols = COLS.filter(c => visible.has(c[0])), [sk, sd] = state.sort;
+        $("rpHead").innerHTML = "<tr>" + cols.map(c => `<th data-s="${c[0]}">${c[1]} ${sk === c[0] ? (sd > 0 ? "▲" : "▼") : ""}</th>`).join("") + "</tr>";
+        const pages = Math.max(1, Math.ceil(rows.length / state.size)); state.page = Math.min(state.page, pages);
+        const from = (state.page - 1) * state.size, slice = rows.slice(from, from + state.size);
+        $("rpBody").innerHTML = slice.length ? slice.map(r => "<tr>" + cols.map(c => `<td>${c[2] ? c[2](r) : r[c[0]]}</td>`).join("") + "</tr>").join("")
+            : `<tr><td colspan="${cols.length}" class="rp-empty">No hay resultados con esos filtros.</td></tr>`;
+        $("rpInfo").textContent = rows.length ? `Mostrando ${from + 1}–${Math.min(from + state.size, rows.length)} de ${rows.length}` : "0 resultados";
+        const around = [...new Set([1, state.page - 1, state.page, state.page + 1, pages])].filter(p => p >= 1 && p <= pages).sort((a, b) => a - b);
+        $("rpPages").innerHTML = `<button class="btn" data-p="${state.page - 1}" ${state.page === 1 ? "disabled" : ""}>‹</button>` +
+            around.map(p => `<button class="btn ${p === state.page ? "on" : ""}" data-p="${p}">${p}</button>`).join("") +
+            `<button class="btn" data-p="${state.page + 1}" ${state.page === pages ? "disabled" : ""}>›</button>`;
+    }
+
+    function render() {
+        const rows = filtered();
+        $("rpCount").textContent = `${rows.length} de ${DATA.length} matrículas coinciden`;
+        kpis(rows); charts(rows); table(rows);
+    }
+
+    /* ---------- 6. EVENTOS: orden, paginación, columnas, exportación ---------- */
+    $("rpHead").addEventListener("click", e => { const th = e.target.closest("th"); if (!th) return;
+        const k = th.dataset.s; state.sort = [k, state.sort[0] === k ? -state.sort[1] : 1]; render(); });
+    $("rpPages").addEventListener("click", e => { const b = e.target.closest("button"); const p = b ? +b.dataset.p : 0; if (p) { state.page = p; render(); } });
+    $("rpSize").addEventListener("change", e => { state.size = +e.target.value; state.page = 1; render(); });
+
+    $("rpCols").innerHTML = "<h2>Columnas del reporte</h2><p class='sub'>Se aplican a la tabla y a las exportaciones.</p>" +
+        COLS.map(c => `<label><input type="checkbox" data-c="${c[0]}" checked>${c[1]}</label>`).join("");
+    $("rpCols").addEventListener("change", e => { const c = e.target.dataset.c; if (!c) return;
+        e.target.checked ? visible.add(c) : visible.delete(c); render(); });
+
+    const plain = (r, k) => k === "avance" ? r.avance + "%" : (r[k] ?? "");
+    const matrix = () => { const cols = COLS.filter(c => visible.has(c[0]));
+        return [cols.map(c => c[1]), ...filtered().map(r => cols.map(c => plain(r, c[0])))]; };
+
+    root.addEventListener("click", e => {
+        const b = e.target.closest("[data-act]"); if (!b) return; const act = b.dataset.act;
+        if (act === "csv") window.UMExport.csv(matrix(), "reporte_umonge");
+        if (act === "xls") window.UMExport.xlsx(matrix(), "reporte_umonge", { hoja: "Matrículas" });
+        if (act === "pdf") window.UMExport.pdf(matrix(), "reporte_umonge", { titulo: "Reporte académico" });
+        if (act === "print") window.print();
+        if (act === "cols" || act === "custom") $("rpCols").classList.toggle("open");
+        if (act === "reset") { state.f = {}; root.querySelectorAll("[data-f]").forEach(i => i.value = ""); state.page = 1; render(); }
+    });
+    document.addEventListener("click", e => { if (!e.target.closest(".rp-actions")) { const c = $("rpCols"); if (c) c.classList.remove("open"); } });
+
+    render();
+})();
+</script>
+
+<section class="rp" id="rpCurso" hidden>
+    <div class="rp-head">
+        <div>
+            <span class="rp-eyebrow">UNIVERSIDAD MONGE / REPORTE POR CURSO</span>
+            <h1>Cumplimiento por curso</h1>
+            <p>Quién completó, quién está pendiente y quién no ha iniciado. Formato oficial de reportes. <em>Datos de demostración.</em></p>
+        </div>
+        <div class="rp-actions">
+            <button class="btn" data-c="cols">▦ Columnas</button><button class="btn" data-c="csv">⇩ CSV</button><button class="btn" data-c="xlsx">⇩ Excel (.xlsx)</button>
+            <button class="btn" data-c="pdf">⇩ PDF</button><button class="btn" data-c="print">⎙ Imprimir</button>
+            <div class="rp-card rp-pop" id="rcCols"></div>
+        </div>
+    </div>
+    <div class="rp-kpis" id="rcKpis"></div>
+    <div class="rp-card rp-filters">
+        <div class="rp-fgrid" id="rcFil"></div>
+        <div class="rp-ffoot"><span id="rcCount" class="mut"></span><button class="btn" data-c="reset">Limpiar filtros</button></div>
+    </div>
+    <div class="rp-card" style="margin-top:18px">
+        <div class="rp-tbar"><div><h2 id="rcTit">Participantes</h2></div><div><span class="mut" style="font-size:12px">Filas por página</span><select id="rcSize"><option>15</option><option>25</option><option>50</option><option>100</option></select></div></div>
+        <div class="rp-wrap"><table style="min-width:1400px"><thead id="rcHead"></thead><tbody id="rcBody"></tbody></table></div>
+        <div class="rp-pag"><span id="rcInfo" class="mut"></span><div id="rcPages"></div></div>
+    </div>
+</section>
+
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, $ = id => document.getElementById(id), esc = UM.esc;
+    const HEAD = [...D.COLS_REPORTE, "Estado"], visible = new Set(HEAD);
+    const st = { curso: +(UM.params.curso || 1), f: {}, sort: [0, 1], page: 1, size: 15 };
+    const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    let rows = [];
+
+    // pestañas
+    const tabs = document.querySelector(".rp-tabs"), res = $("rpModule"), cur = $("rpCurso");
+    const modo = m => { tabs.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === m)); res.hidden = m !== "res"; cur.hidden = m !== "cur"; };
+    tabs.addEventListener("click", e => { const b = e.target.closest("[data-m]"); if (b) modo(b.dataset.m); });
+    if (UM.params.curso) modo("cur");
+
+    function selectores() {
+        const cats = window.UM_CATEGORIAS || {};
+        const optCurso = Object.keys(cats).map(c => `<optgroup label="${esc(c)}">${D.catalogo().filter(x => x.categoria === c).map(x => `<option value="${x.id}" ${x.id === st.curso ? "selected" : ""}>${esc(x.titulo)}</option>`).join("")}</optgroup>`).join("");
+        $("rcFil").innerHTML = `<label style="grid-column:1/-1">Curso<select data-f="curso">${optCurso}</select></label>
+            <label style="grid-column:1/-1">Buscar (nombre, apellido, cédula o usuario)<input data-f="q" placeholder="Escribe para filtrar en tiempo real…"></label>
+            <label>Estado<select data-f="estado"><option value="">Todos</option><option>Completado</option><option>Pendiente</option><option>Sin iniciar</option><option>Reprobado</option></select></label>
+            ${[["departamento", "Departamento"], ["puesto", "Puesto"], ["ubicacion", "Ubicación"], ["regional", "Regional"], ["idJefatura", "ID jefatura"]].map(([k, l]) => `<label>${l}<select data-f="${k}"><option value="">Todos</option>${[...new Set(rows.map(r => r.u[k]))].sort().map(v => `<option>${esc(v)}</option>`).join("")}</select></label>`).join("")}
+            <label>Nota mínima<input data-f="notaMin" type="number" min="0" max="100"></label>`;
+    }
+    function filtrar() {
+        const f = st.f;
+        const l = rows.filter(r => (!f.q || norm([r.u.nombre, r.u.apellido, r.u.cedula, r.u.usuario].join(" ")).includes(norm(f.q))) && (!f.estado || r.estado === f.estado) &&
+            ["departamento", "puesto", "ubicacion", "regional", "idJefatura"].every(k => !f[k] || r.u[k] === f[k]) && (!f.notaMin || (r.nota !== "" && r.nota >= +f.notaMin)));
+        const [k, d] = st.sort, val = r => HEAD.indexOf("Estado") === k ? r.estado : D.filaReporte(r)[k];
+        return l.sort((a, b) => (val(a) > val(b) ? 1 : val(a) < val(b) ? -1 : 0) * d);
+    }
+    const fila = r => [...D.filaReporte(r), r.estado];
+    const badge = e => `<span class="st st-${e.split(" ")[0]}">${e}</span>`;
+
+    function pintar() {
+        const l = filtrar(), c = D.curso(st.curso), cols = HEAD.map((h, i) => [h, i]).filter(x => visible.has(x[0]));
+        const n = e => rows.filter(r => r.estado === e).length, ok = rows.filter(r => r.nota !== ""), prom = ok.length ? (ok.reduce((s, r) => s + +r.nota, 0) / ok.length).toFixed(1) : "—";
+        $("rcKpis").innerHTML = [["Participantes", rows.length, "Inscritos en el curso"], ["Completaron", n("Completado"), "Nota ≥ " + D.PASA], ["Pendientes", n("Pendiente"), "Iniciaron, sin terminar"], ["Sin iniciar", n("Sin iniciar"), "No han abierto el curso"],
+            ["Reprobados", n("Reprobado"), "Nota < " + D.PASA], ["Promedio de nota", prom, "Con nota registrada"], ["Cumplimiento", rows.length ? Math.round(n("Completado") / rows.length * 100) + "%" : "—", "Completaron / inscritos"]]
+            .map(([a, b, s]) => `<div class="rp-card rp-kpi"><span>${a}</span><strong>${b}</strong><small>${s}</small></div>`).join("");
+        $("rcTit").textContent = c.titulo + " · " + c.codigo; $("rcCount").textContent = `${l.length} de ${rows.length} participantes coinciden`;
+        $("rcHead").innerHTML = "<tr>" + cols.map(([h, i]) => `<th data-s="${i}">${h} ${st.sort[0] === i ? (st.sort[1] > 0 ? "▲" : "▼") : ""}</th>`).join("") + "</tr>";
+        const pags = Math.max(1, Math.ceil(l.length / st.size)); st.page = Math.min(st.page, pags); const ini = (st.page - 1) * st.size;
+        $("rcBody").innerHTML = l.slice(ini, ini + st.size).map(r => { const v = fila(r); return "<tr>" + cols.map(([h, i]) => `<td>${h === "Estado" ? badge(v[i]) : esc(v[i])}</td>`).join("") + "</tr>"; }).join("") ||
+            `<tr><td colspan="${cols.length}" class="rp-empty">No hay participantes con esos filtros.</td></tr>`;
+        $("rcInfo").textContent = l.length ? `Mostrando ${ini + 1}–${Math.min(ini + st.size, l.length)} de ${l.length}` : "0 resultados";
+        const near = [...new Set([1, st.page - 1, st.page, st.page + 1, pags])].filter(p => p >= 1 && p <= pags).sort((a, b) => a - b);
+        $("rcPages").innerHTML = `<button class="btn" data-p="${st.page - 1}" ${st.page === 1 ? "disabled" : ""}>‹</button>` + near.map(p => `<button class="btn ${p === st.page ? "on" : ""}" data-p="${p}">${p}</button>`).join("") + `<button class="btn" data-p="${st.page + 1}" ${st.page === pags ? "disabled" : ""}>›</button>`;
+    }
+    function cargarCurso() { rows = D.reporteCurso(st.curso); const keep = st.f.curso; st.f = {}; selectores(); st.page = 1; pintar(); }
+
+    $("rcFil").addEventListener("input", e => { const k = e.target.dataset.f; if (!k) return; if (k === "curso") { st.curso = +e.target.value; cargarCurso(); return; } st.f[k] = e.target.value.trim(); st.page = 1; pintar(); });
+    $("rcHead").addEventListener("click", e => { const th = e.target.closest("th"); if (!th) return; const i = +th.dataset.s; st.sort = [i, st.sort[0] === i ? -st.sort[1] : 1]; pintar(); });
+    $("rcPages").addEventListener("click", e => { const b = e.target.closest("button"); const p = b ? +b.dataset.p : 0; if (p) { st.page = p; pintar(); } });
+    $("rcSize").addEventListener("change", e => { st.size = +e.target.value; st.page = 1; pintar(); });
+    $("rcCols").innerHTML = "<h2>Columnas del reporte</h2><p class='sub'>Se aplican a la tabla y a las exportaciones.</p>" + HEAD.map(h => `<label><input type="checkbox" data-col="${h}" checked>${h}</label>`).join("");
+    $("rcCols").addEventListener("change", e => { const h = e.target.dataset.col; if (!h) return; e.target.checked ? visible.add(h) : visible.delete(h); pintar(); });
+
+    const matriz = () => { const idx = HEAD.map((h, i) => [h, i]).filter(x => visible.has(x[0])); return [idx.map(x => x[0]), ...filtrar().map(r => { const v = fila(r); return idx.map(x => v[x[1]]); })]; };
+    cur.addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (!b) return; const a = b.dataset.c, c = D.curso(st.curso), nombre = "reporte_curso_" + c.codigo;
+        if (a === "csv") window.UMExport.csv(matriz(), nombre); if (a === "xlsx") window.UMExport.xlsx(matriz(), nombre, { hoja: "Reporte" });
+        if (a === "pdf") window.UMExport.pdf(matriz(), nombre, { titulo: c.titulo.slice(0, 60), subtitulo: "Reporte de curso · " + c.codigo + " · " + new Date().toLocaleDateString("es-NI") });
+        if (a === "print") window.print(); if (a === "cols") $("rcCols").classList.toggle("open");
+        if (a === "reset") { st.f = {}; cur.querySelectorAll("[data-f]").forEach(i => { if (i.dataset.f !== "curso") i.value = ""; }); st.page = 1; pintar(); } });
+    document.addEventListener("click", e => { if (!e.target.closest(".rp-actions")) { const c = $("rcCols"); if (c) c.classList.remove("open"); } });
+    cargarCurso();
+})();
+</script>

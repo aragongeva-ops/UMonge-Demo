@@ -1,0 +1,88 @@
+<style>
+.mt-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.mt-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.mt-head h1 { font-size: 28px; margin: 8px 0 6px; }
+.mt-head p { font-size: 13px; }
+.mt-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.mt-stats article { padding: 18px; }
+.mt-stats h2 { font-size: 28px; margin: 8px 0 4px; }
+.mt-tools { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.mt-tools input, .mt-tools select { padding: 11px 13px; border-radius: 9px; font: inherit; font-size: 13px; color: #f4f2f2; background: rgba(12,12,15,.75); border: 1px solid rgba(255,255,255,.16); }
+.mt-tools input { flex: 1; min-width: 180px; }
+.mt-count { font-size: 12px; margin-bottom: 12px; }
+.mt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.mt-card { padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+.mt-top { display: flex; justify-content: space-between; align-items: center; }
+.mt-tipo { padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; background: rgba(217,0,0,.2); color: #ff8f8f; }
+.mt-card h3 { font-size: 15px; line-height: 1.4; }
+.mt-card small { font-size: 11px; line-height: 1.6; }
+.mt-card .acts { display: flex; gap: 8px; margin-top: auto; padding-top: 10px; }
+.mt-btn { flex: 1; padding: 10px; border-radius: 9px; cursor: pointer; font-size: 12px; font-weight: 700; color: #fff; border: 0; background: linear-gradient(110deg, #b5121b, #ef2b2b); }
+.mt-btn.ghost { flex: 0; background: transparent; border: 1px solid rgba(255,255,255,.2); padding: 10px 12px; }
+.mt-vacio { text-align: center; padding: 40px 10px; font-size: 13px; }
+</style>
+
+<section class="mt">
+    <div class="mt-head">
+        <div>
+            <span class="mt-eyebrow">CAMPUS NICARAGUA</span>
+            <h1>Biblioteca de materiales</h1>
+            <p>PDF, presentaciones, videos y documentos de tus cursos y academias.</p>
+        </div>
+        <button type="button" class="um-btn" id="mtAdd" hidden>+ Agregar material</button>
+    </div>
+    <div class="mt-stats" id="mtStats"></div>
+    <div class="mt-tools">
+        <input type="search" id="mtQ" placeholder="Buscar material…">
+        <select id="mtTipo"><option value="">Todos los tipos</option></select>
+        <select id="mtCurso"><option value="">Todos los cursos</option></select>
+    </div>
+    <p class="mt-count mut" id="mtCount"></p>
+    <div class="mt-grid" id="mtGrid"></div>
+</section>
+
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, $ = id => document.getElementById(id), esc = UM.esc;
+    let todos = [];
+    const cursoDe = m => D.catalogo().find(c => UM.esDeCurso(m, c));
+    const etiqueta = m => { const c = cursoDe(m); return c ? c.titulo : (m.curso ? String(m.curso) : "Material general"); };
+
+    $("mtAdd").hidden = !UM.puede("subir");
+    $("mtAdd").addEventListener("click", () => UM.subir({ ambito: "material", curso: UM.params.curso || "", onDone: cargar }));
+
+    function filtrar() {
+        const q = $("mtQ").value.trim().toLowerCase(), t = $("mtTipo").value, c = $("mtCurso").value;
+        return todos.filter(m => (!q || (m.titulo + " " + m.nombre + " " + etiqueta(m) + " " + m.categoria).toLowerCase().includes(q)) &&
+            (!t || m.tipo === t) && (!c || (c === "_gen" ? !cursoDe(m) : cursoDe(m) && String(cursoDe(m).id) === c)));
+    }
+    function pintar() {
+        const l = filtrar();
+        $("mtCount").textContent = `${l.length} de ${todos.length} materiales`;
+        $("mtGrid").innerHTML = l.length ? l.map(m => `<article class="mt-card"><div class="mt-top"><span class="mt-tipo">${esc(m.tipo)}</span><small class="mut">${m.size || ""}</small></div>
+            <h3>${esc(m.titulo)}</h3><small class="mut">${esc(m.categoria)}<br>Curso: ${esc(etiqueta(m))}<br>${esc(m.nombre)}${m.fecha ? " · " + UM.fecha(m.fecha, { day: "2-digit", month: "short", year: "numeric" }) : ""}</small>
+            <div class="acts"><button class="mt-btn" data-a="abrir" data-id="${m.id}">${["PDF", "IMG"].includes(m.tipo) ? "Abrir" : "Descargar"}</button>
+            ${m.origen === "local" && UM.puede("subir") ? `<button class="mt-btn ghost" data-a="quitar" data-id="${m.id}" title="Quitar">🗑</button>` : ""}</div></article>`).join("")
+            : '<div class="mt-vacio mut">No hay materiales con esos criterios. Usa «+ Agregar material» o copia archivos en la carpeta <strong>materiales/</strong> (ver LEEME.txt).</div>';
+    }
+    function stats() {
+        const n = t => todos.filter(m => t.includes(m.tipo)).length;
+        $("mtStats").innerHTML = [["Materiales", todos.length, "En la biblioteca"], ["Documentos PDF", n(["PDF"]), "Lecturas y políticas"], ["Presentaciones", n(["PPT"]), "Apoyo para cursos"], ["Videos y otros", todos.length - n(["PDF", "PPT"]), "Videos, Word, Excel"]]
+            .map(([l, v, s]) => `<article><span>${l}</span><h2>${v}</h2><small class="mut">${s}</small></article>`).join("");
+    }
+    async function cargar() {
+        todos = await UM.materiales(); stats();
+        $("mtTipo").innerHTML = '<option value="">Todos los tipos</option>' + [...new Set(todos.map(m => m.tipo))].sort().map(t => `<option>${t}</option>`).join("");
+        $("mtCurso").innerHTML = '<option value="">Todos los cursos</option><option value="_gen">Material general</option>' + D.catalogo().filter(c => todos.some(m => UM.esDeCurso(m, c))).map(c => `<option value="${c.id}">${esc(c.titulo)}</option>`).join("");
+        if (UM.params.curso) $("mtCurso").value = String(UM.params.curso);
+        pintar();
+    }
+    ["mtQ"].forEach(i => $(i).addEventListener("input", pintar)); ["mtTipo", "mtCurso"].forEach(i => $(i).addEventListener("change", pintar));
+    $("mtGrid").addEventListener("click", async e => {
+        const b = e.target.closest("[data-a]"); if (!b) return; const m = todos.find(x => String(x.id) === b.dataset.id); if (!m) return;
+        if (b.dataset.a === "abrir") UM.abrir(m);
+        if (b.dataset.a === "quitar") { await window.UMStore.remove(m.id); UM.toast("Material quitado"); cargar(); }
+    });
+    cargar();
+})();
+</script>

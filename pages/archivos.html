@@ -1,0 +1,42 @@
+<style>
+.ar-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+.ar-head h1 { font-size: 28px; margin: 8px 0 6px; }
+.ar-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.ar-box { padding: 6px 22px 12px; }
+.ar-row { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--border); }
+.ar-row:first-child { border-top: 0; }
+.ar-row .t { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 11px; font-weight: 800; background: rgba(217,0,0,.18); color: #ff8f8f; flex-shrink: 0; }
+.ar-row .n { flex: 1; min-width: 0; font-size: 13px; }
+.ar-row .n strong { display: block; overflow: hidden; text-overflow: ellipsis; }
+.ar-row .n small { font-size: 11px; }
+.ar-row button { padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); }
+.ar-row button:hover { border-color: #ef2b2b; }
+.ar-vacio { text-align: center; padding: 34px 10px; font-size: 13px; }
+</style>
+<section>
+    <div class="ar-head">
+        <div><span class="ar-eyebrow">MI CUENTA</span><h1>Archivos privados</h1><p style="font-size:13px" class="mut">Solo tú ves estos archivos. Se guardan en este navegador.</p></div>
+        <button type="button" class="um-btn" id="arAdd">+ Subir archivos</button>
+    </div>
+    <article class="ar-box" id="arLista"></article>
+</section>
+<script>
+(function () {
+    const UM = window.UM, $ = id => document.getElementById(id), esc = UM.esc;
+    let lista = [];
+    async function cargar() {
+        lista = await window.UMStore.list("privado");
+        $("arLista").innerHTML = lista.length ? lista.map(f => `<div class="ar-row"><span class="t">${esc(f.tipo.slice(0, 4))}</span>
+            <div class="n"><strong>${esc(f.nombre)}</strong><small class="mut">${window.UMStore.size(f.size)} · ${UM.fecha(f.fecha, { day: "2-digit", month: "short", year: "numeric" })}</small></div>
+            <button data-a="abrir" data-id="${f.id}">${["PDF", "IMG"].includes(f.tipo) ? "Abrir" : "Descargar"}</button><button data-a="borrar" data-id="${f.id}" title="Eliminar">🗑</button></div>`).join("")
+            : '<div class="ar-vacio mut">Aún no tienes archivos. Usa «+ Subir archivos».</div>';
+    }
+    $("arAdd").addEventListener("click", () => UM.subir({ ambito: "privado", onDone: cargar }));
+    $("arLista").addEventListener("click", async e => {
+        const b = e.target.closest("[data-a]"); if (!b) return; const f = lista.find(x => String(x.id) === b.dataset.id); if (!f) return;
+        if (b.dataset.a === "abrir") UM.abrir({ nombre: f.nombre, tipo: f.tipo, blob: f.blob });
+        if (b.dataset.a === "borrar") { await window.UMStore.remove(f.id); UM.toast("Archivo eliminado"); cargar(); }
+    });
+    cargar();
+})();
+</script>

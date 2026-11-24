@@ -1,0 +1,7 @@
+CÓMO AGREGAR PDF, PPT Y OTROS ARCHIVOS
+1) Copia el archivo dentro de esta carpeta (materiales/).
+2) Abre data/materiales.json y agrega una línea:
+   {"titulo":"Nombre visible","archivo":"materiales/mi_archivo.pdf","curso":"parte del título del curso o su número","categoria":"General"}
+   - "curso" vacío = material general (aparece solo en Materiales).
+   - Tipos: .pdf (se abre en visor), .ppt/.pptx/.doc/.docx/.xls/.xlsx (se descargan), .mp4 (video sin adelantar).
+Otra forma, sin tocar archivos: usa el botón "+ Agregar material" dentro de la plataforma (se guarda en tu navegador).

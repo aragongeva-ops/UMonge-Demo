@@ -1,0 +1,37 @@
+<style>
+.ev-eyebrow, .ac2-eyebrow, .sg-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.ev-head h1, .ac2-head h1, .sg-head h1 { font-size: 28px; margin: 8px 0 6px; }
+.ev-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 22px 0; }
+.ev-stats article { padding: 18px; } .ev-stats h2 { font-size: 28px; margin: 8px 0 4px; }
+.ev-list article { padding: 18px 22px; margin-bottom: 12px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.ev-info { flex: 1; min-width: 240px; }
+.ev-info small { font-size: 11px; display: block; margin-bottom: 4px; }
+.ev-info h3 { font-size: 15px; margin-bottom: 6px; line-height: 1.4; }
+.ev-meta { font-size: 11px; display: flex; gap: 14px; flex-wrap: wrap; }
+.ev-badge { padding: 5px 11px; border-radius: 20px; font-size: 10px; font-weight: 800; background: rgba(255,255,255,.12); }
+.ev-badge.ok { background: rgba(50,190,110,.22); color: #7be2a8; } .ev-badge.no { background: rgba(239,43,43,.22); color: #ff8f8f; } .ev-badge.wait { background: rgba(240,180,60,.2); color: #ffd27a; }
+.ev-go { padding: 10px 16px; border-radius: 9px; border: 0; cursor: pointer; font-size: 12px; font-weight: 700; color: #fff; background: linear-gradient(110deg, #b5121b, #ef2b2b); }
+.ev-vacio { text-align: center; padding: 30px; font-size: 13px; }
+</style>
+<section>
+    <div class="ev-head"><span class="ev-eyebrow">CAMPUS NICARAGUA / FORMACIÓN</span><h1>Evaluaciones</h1>
+        <p style="font-size:13px" class="mut">Selección única · calificación aprobatoria 80% · 3 intentos · se toma la calificación más alta.</p></div>
+    <div class="ev-stats" id="evStats"></div>
+    <div class="ev-list" id="evList"></div>
+</section>
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, $ = id => document.getElementById(id), esc = UM.esc;
+    const m = D.misCursos().map(c => { const r = D.rec(c.id), p = D.pasos(c.id), usados = (r.intentos || []).length, mejor = D.mejor(c.id);
+        const est = p.eval ? ["Aprobada", "ok"] : !p.conf ? ["No disponible", ""] : usados >= D.INTENTOS ? ["Sin intentos", "no"] : usados ? ["No aprobada", "no"] : ["Disponible", "wait"];
+        return { c, usados, mejor, est, disp: p.conf }; });
+    const hechas = m.filter(x => x.est[0] === "Aprobada"), notas = m.filter(x => x.mejor !== null);
+    $("evStats").innerHTML = [["Evaluaciones asignadas", m.length, "En mis cursos"], ["Pendientes", m.length - hechas.length, "Por aprobar"], ["Aprobadas", hechas.length, "Con " + D.PASA + "% o más"],
+        ["Mejor promedio", notas.length ? Math.round(notas.reduce((s, x) => s + x.mejor, 0) / notas.length) : "—", "Calificación más alta"]].map(([a, b, c]) => `<article><span>${a}</span><h2>${b}</h2><small class="mut">${c}</small></article>`).join("");
+    $("evList").innerHTML = m.length ? m.map(x => `<article><div class="ev-info"><small class="mut">${esc(x.c.categoria)} · ${esc(x.c.subcategoria)}</small><h3>Evaluación: ${esc(x.c.titulo)}</h3>
+        <div class="ev-meta mut"><span>Intentos: ${x.usados}/${D.INTENTOS}</span><span>Mejor nota: ${x.mejor === null ? "—" : x.mejor + "/100"}</span></div></div>
+        <span class="ev-badge ${x.est[1]}">${x.est[0].toUpperCase()}</span><button class="ev-go" data-id="${x.c.id}">${x.disp ? "Ver evaluación" : "Ir al curso"}</button></article>`).join("")
+        : '<article class="ev-vacio mut">No tienes cursos asignados.</article>';
+    $("evList").addEventListener("click", e => { const b = e.target.closest("[data-id]"); if (b) UM.open("curso", { id: +b.dataset.id }); });
+})();
+</script>

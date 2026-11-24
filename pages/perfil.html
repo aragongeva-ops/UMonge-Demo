@@ -1,0 +1,58 @@
+<style>
+.pf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; align-items: start; }
+.pf-grid article { padding: 22px; }
+.pf-top { display: flex; gap: 18px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+.pf-av { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #D90000, #3a0a0e); border: 2px solid rgba(255,255,255,.2); }
+.pf-top h1 { font-size: 26px; }
+.pf-rol { display: inline-block; margin-top: 6px; padding: 4px 11px; border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: .5px; background: rgba(217,0,0,.22); color: #ff8f8f; }
+.pf-grid h2 { font-size: 15px; margin-bottom: 14px; }
+.pf-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 12px; }
+.pf-row:first-of-type { border-top: 0; }
+.pf-row span { color: var(--muted); }
+.pf-row strong { text-align: right; }
+.pf-link { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 8px 0; cursor: pointer; font-size: 13px; color: #ff8f8f; text-decoration: underline; text-underline-offset: 3px; }
+.pf-link:hover { color: #fff; }
+.pf-acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+</style>
+<section>
+    <div class="pf-top">
+        <div class="pf-av" id="pfAv"></div>
+        <div><h1 id="pfNombre"></h1><span class="pf-rol" id="pfRol"></span></div>
+        <div class="pf-acts" style="margin:0 0 0 auto"><button class="um-btn ghost" data-go="comunicados">Mensajes</button><button class="um-btn" id="pfEdit">Editar perfil</button></div>
+    </div>
+    <div class="pf-grid">
+        <article><h2>Detalles de usuario</h2><div id="pfDet"></div></article>
+        <article><h2>Perfiles de curso</h2><div id="pfCursos"></div></article>
+        <article><h2>Informes</h2>
+            <button class="pf-link" id="pfSes">Sesiones del navegador</button><button class="pf-link" data-go="seguimiento">Resumen de calificaciones</button>
+            <button class="pf-link" id="pfPriv">Resumen de retención de datos</button>
+            <h2 style="margin-top:22px">Actividad de accesos</h2><div id="pfAcc"></div></article>
+    </div>
+</section>
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, $ = id => document.getElementById(id), esc = UM.esc, u = UM.yo;
+    const f = d => UM.fecha(d, { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    function pintar() {
+        const u = window.UMUsers.actual();
+        $("pfAv").textContent = UM.iniciales(UM.nombre); $("pfNombre").textContent = (u.id ? u.nombre + " " + u.apellido : UM.usuario).trim(); $("pfRol").textContent = UM.ROLES[UM.rol].toUpperCase();
+        const filas = [["Usuario", u.usuario || UM.usuario], ["Correo", u.correo || "—"], ["Cédula", u.cedula || "—"], ["Departamento", u.departamento || "—"], ["Puesto", u.puesto || "—"],
+            ["Ubicación", u.ubicacion || "—"], ["Regional", u.regional || "—"], ["ID jefatura", u.idJefatura || "—"], ["País", "Nicaragua"], ["Zona horaria", "America/Costa_Rica"]];
+        $("pfDet").innerHTML = filas.map(([k, v]) => `<div class="pf-row"><span>${k}</span><strong>${esc(v)}</strong></div>`).join("");
+        const m = D.misCursos();
+        $("pfCursos").innerHTML = m.length ? m.map(c => `<button class="pf-link" data-go="curso" data-params='{"id":${c.id}}'>${esc(c.titulo)}</button>`).join("") : '<p class="mut" style="font-size:13px">Sin cursos asignados.</p>';
+        const first = localStorage.getItem("umonge_first"), prev = localStorage.getItem("umonge_prev");
+        $("pfAcc").innerHTML = [["Primer acceso al sitio", first ? f(first) : "—"], ["Acceso anterior", prev ? f(prev) : "—"], ["Último acceso", f(new Date()) + " (ahora)"]]
+            .map(([k, v]) => `<div class="pf-row"><span>${k}</span><strong>${v}</strong></div>`).join("");
+    }
+    $("pfSes").addEventListener("click", () => UM.modal({ titulo: "Sesiones del navegador", html: `<div class="pf-row"><span>Sesión actual</span><strong>Activa desde ${f(JSON.parse(localStorage.getItem("umonge_session")).entrada)}</strong></div>
+        <div class="pf-row"><span>Navegador</span><strong style="max-width:60%;font-size:11px">${esc(navigator.userAgent)}</strong></div>` }));
+    $("pfPriv").addEventListener("click", () => UM.modal({ titulo: "Resumen de retención de datos", html: "<p>En esta versión de demostración, tu progreso, notas y archivos se guardan <strong>solo en este navegador</strong> (localStorage e IndexedDB). Al borrar los datos del sitio se eliminan.</p><p>Con el servidor en producción, los registros de lectura, confirmación y evaluación se guardarán en la base de datos institucional junto con cédula, jefatura y usuario.</p>" }));
+    $("pfEdit").addEventListener("click", () => {
+        const u = window.UMUsers.actual(); if (!u.id) { UM.toast("Este usuario no está en el directorio: pídele al administrador que lo registre"); return; }
+        const m = UM.modal({ titulo: "Editar perfil", ancho: 460, html: ["correo", "puesto", "ubicacion"].map(k => `<div class="um-field"><label>${k[0].toUpperCase() + k.slice(1)}</label><input id="pe_${k}" value="${esc(u[k] || "")}"></div>`).join("") + '<button class="um-btn" id="peOk">Guardar</button>' });
+        m.el.querySelector("#peOk").addEventListener("click", () => { window.UMUsers.update(u.id, { correo: m.el.querySelector("#pe_correo").value.trim(), puesto: m.el.querySelector("#pe_puesto").value.trim(), ubicacion: m.el.querySelector("#pe_ubicacion").value.trim() }); m.cerrar(); UM.toast("Perfil actualizado"); pintar(); });
+    });
+    pintar();
+})();
+</script>

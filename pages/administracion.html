@@ -1,0 +1,90 @@
+<style>
+.ad-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.ad h1 { font-size: 28px; margin: 8px 0 6px; }
+.ad-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 22px 0; }
+.ad-stats article { padding: 18px; } .ad-stats h2 { font-size: 28px; margin: 8px 0 4px; }
+.ad-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: 18px; align-items: start; }
+.ad-grid > article, .ad-more { padding: 22px; }
+.ad h2.t { font-size: 17px; margin-bottom: 4px; }
+.ad-tools { display: flex; gap: 8px; margin: 14px 0; }
+.ad-tools input { flex: 1; padding: 10px 12px; border-radius: 8px; font: inherit; font-size: 12px; color: #f4f2f2; background: rgba(12,12,15,.75); border: 1px solid rgba(255,255,255,.16); }
+.ad-btn { padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); white-space: nowrap; }
+.ad-btn:hover { border-color: #ef2b2b; }
+.ad-tree details { margin: 4px 0; }
+.ad-tree summary { cursor: pointer; padding: 9px 6px; font-size: 13px; font-weight: 700; border-radius: 6px; }
+.ad-tree summary:hover { background: rgba(255,255,255,.07); }
+.ad-tree details details { margin-left: 18px; } .ad-tree details details summary { font-weight: 600; font-size: 12px; }
+.ad-tree summary small { font-weight: 400; color: var(--muted); }
+.ad-cur { display: flex; gap: 8px; align-items: center; margin-left: 40px; padding: 6px 4px; font-size: 12px; border-top: 1px solid var(--border); }
+.ad-cur a { flex: 1; cursor: pointer; color: #ff8f8f; } .ad-cur a:hover { color: #fff; text-decoration: underline; }
+.ad-cur button { padding: 4px 9px; border-radius: 6px; font-size: 10px; cursor: pointer; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); }
+.ad-prof { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--border); font-size: 12px; }
+.ad-prof:first-of-type { border-top: 0; }
+.ad-sw { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+.ad-sw input { opacity: 0; width: 100%; height: 100%; position: absolute; cursor: pointer; margin: 0; z-index: 2; }
+.ad-sw i { position: absolute; inset: 0; border-radius: 12px; background: rgba(255,255,255,.2); transition: .2s; }
+.ad-sw i::after { content: ""; position: absolute; width: 18px; height: 18px; top: 3px; left: 3px; border-radius: 50%; background: #fff; transition: .2s; }
+.ad-sw input:checked + i { background: #D90000; } .ad-sw input:checked + i::after { transform: translateX(18px); }
+.ad-more { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.ad-tile { padding: 16px; border-radius: 12px; text-align: left; cursor: pointer; font-size: 13px; font-weight: 700; color: #f4f2f2; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14); }
+.ad-tile small { display: block; font-weight: 400; margin-top: 4px; color: #c6c6cf; font-size: 11px; }
+.ad-tile:hover:not(:disabled) { border-color: #ef2b2b; } .ad-tile:disabled { opacity: .5; cursor: default; }
+@media (max-width: 980px) { .ad-grid { grid-template-columns: 1fr; } }
+</style>
+
+<section class="ad">
+    <span class="ad-eyebrow">GESTIÓN DE LA PLATAFORMA</span>
+    <h1>Administración</h1>
+    <p style="font-size:13px" class="mut">Categorías y cursos, permisos de profesores y accesos a los módulos de gestión.</p>
+    <div class="ad-stats" id="adStats"></div>
+
+    <div class="ad-grid">
+        <article>
+            <h2 class="t">Categorías y cursos</h2><p class="mut" style="font-size:12px">Busca cursos y ábrelos para revisarlos o ver su reporte.</p>
+            <div class="ad-tools"><input type="search" id="adQ" placeholder="Buscar cursos…"><button class="ad-btn" id="adExp">Expandir todo</button></div>
+            <div class="ad-tree" id="adTree"></div>
+        </article>
+        <article>
+            <h2 class="t">Permisos de profesores</h2><p class="mut" style="font-size:12px;margin-bottom:10px">Define quién puede subir PDF, PPT y videos.</p>
+            <div id="adProf"></div>
+        </article>
+    </div>
+
+    <article class="ad-more">
+        <button class="ad-tile" data-go="usuarios">Usuarios<small>Registrar, importar y gestionar cuentas</small></button>
+        <button class="ad-tile" data-go="materiales">Banco de contenido<small>PDF, PPT y videos</small></button>
+        <button class="ad-tile" data-go="reportes">Filtros y reportes<small>Quién completó, quién está pendiente</small></button>
+        <button class="ad-tile" disabled>Cohortes<small>Próximamente</small></button>
+        <button class="ad-tile" disabled>Restaurar cursos<small>Próximamente</small></button>
+    </article>
+</section>
+
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, U = window.UMUsers, $ = id => document.getElementById(id), esc = UM.esc, CATS = window.UM_CATEGORIAS || {};
+    const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    let abiertos = false;
+
+    function stats() { const us = U.list(), prof = us.filter(u => u.rol === "profesor");
+        $("adStats").innerHTML = [["Usuarios registrados", us.length, "En toda la organización"], ["Cursos en catálogo", D.catalogo().length, "En 4 categorías"], ["Profesores", prof.length, `${prof.filter(p => p.permisoSubir).length} con permiso de subir`],
+            ["Participantes (demo)", D.catalogo().slice(0, 1).length ? D.participantes(1).length : 0, "En el curso 1"]].map(([a, b, c]) => `<article><span>${a}</span><h2>${b}</h2><small class="mut">${c}</small></article>`).join(""); }
+
+    function arbol() {
+        const q = norm($("adQ").value.trim()), todos = D.catalogo();
+        $("adTree").innerHTML = Object.entries(CATS).map(([cat, subs]) => {
+            const hijos = subs.map(s => { const cs = todos.filter(c => c.categoria === cat && c.subcategoria === s && (!q || norm(c.titulo).includes(q))); if (!cs.length) return "";
+                return `<details ${(q || abiertos) ? "open" : ""}><summary>${esc(s)} <small>(${cs.length})</small></summary>` + cs.map(c => `<div class="ad-cur"><a data-a="abrir" data-id="${c.id}">${esc(c.titulo)}</a><button data-a="rep" data-id="${c.id}">Reporte</button></div>`).join("") + "</details>"; }).join("");
+            return hijos ? `<details ${(q || abiertos) ? "open" : ""}><summary>${esc(cat)} <small>(${todos.filter(c => c.categoria === cat).length})</small></summary>${hijos}</details>` : ""; }).join("") || '<p class="mut" style="font-size:12px">Sin resultados.</p>';
+    }
+    function profes() {
+        $("adProf").innerHTML = U.list().filter(u => u.rol === "profesor").map(u => `<div class="ad-prof"><span><strong>${esc(u.nombre)} ${esc(u.apellido)}</strong><br><small class="mut">${esc(u.departamento)} · ${esc(u.usuario)}</small></span>
+            <label class="ad-sw" title="Permitir subir material"><input type="checkbox" data-u="${u.id}" ${u.permisoSubir ? "checked" : ""}><i></i></label></div>`).join("") || '<p class="mut" style="font-size:12px">No hay profesores registrados.</p>';
+    }
+    $("adQ").addEventListener("input", arbol);
+    $("adExp").addEventListener("click", () => { abiertos = !abiertos; $("adExp").textContent = abiertos ? "Contraer todo" : "Expandir todo"; arbol(); });
+    $("adTree").addEventListener("click", e => { const b = e.target.closest("[data-a]"); if (!b) return; const id = +b.dataset.id;
+        if (b.dataset.a === "abrir") UM.open("curso", { id }); if (b.dataset.a === "rep") UM.open("reportes", { curso: id }); });
+    $("adProf").addEventListener("change", e => { const id = +e.target.dataset.u; if (!id) return; U.update(id, { permisoSubir: e.target.checked }); UM.toast(e.target.checked ? "Permiso de subir concedido" : "Permiso retirado"); stats(); });
+    stats(); arbol(); profes();
+})();
+</script>

@@ -1,0 +1,124 @@
+<style>
+.us-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+.us-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.us-head h1 { font-size: 28px; margin: 8px 0 6px; }
+.us-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.us-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.us-stats article { padding: 18px; } .us-stats h2 { font-size: 28px; margin: 8px 0 4px; }
+.us-box { padding: 20px; }
+.us-tools { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.us-tools input, .us-tools select { padding: 10px 12px; border-radius: 8px; font: inherit; font-size: 12px; color: #f4f2f2; background: rgba(12,12,15,.75); border: 1px solid rgba(255,255,255,.16); }
+.us-tools input { flex: 1; min-width: 200px; }
+.us-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+.us table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1250px; }
+.us th { text-align: left; padding: 12px 10px; font-size: 11px; background: rgba(0,0,0,.4); white-space: nowrap; }
+.us td { padding: 10px; border-top: 1px solid var(--border); white-space: nowrap; }
+.us .st { padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 800; }
+.us .on { background: rgba(50,190,110,.2); color: #7be2a8; } .us .off { background: rgba(239,43,43,.22); color: #ff8f8f; }
+.us .rol { font-size: 10px; font-weight: 800; letter-spacing: .5px; color: #ff8f8f; }
+.us td button { padding: 6px 10px; border-radius: 7px; cursor: pointer; font-size: 11px; font-weight: 700; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); margin-right: 4px; }
+.us td button:hover { border-color: #ef2b2b; }
+.us-pag { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; }
+.us-pag div { display: flex; gap: 5px; }
+.us-pag button { padding: 7px 11px; border-radius: 7px; cursor: pointer; font-size: 12px; color: #f4f2f2; background: transparent; border: 1px solid rgba(255,255,255,.2); }
+.us-pag button.on { background: linear-gradient(110deg, #b5121b, #ef2b2b); border-color: transparent; }
+.us-pag button:disabled { opacity: .4; cursor: default; }
+.us-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.us-chk { display: flex; gap: 8px; align-items: center; font-size: 12px; cursor: pointer; }
+@media (max-width: 560px) { .us-form { grid-template-columns: 1fr; } }
+</style>
+
+<section class="us">
+    <div class="us-head">
+        <div><span class="us-eyebrow">GESTIÓN INSTITUCIONAL · NICARAGUA</span><h1>Gestión de usuarios</h1>
+            <p style="font-size:13px" class="mut">Administra cuentas, roles y permisos. Los datos siguen el formato oficial de reportes.</p></div>
+        <div class="us-acts">
+            <button class="um-btn ghost" data-a="exp" data-f="csv">⇩ CSV</button><button class="um-btn ghost" data-a="exp" data-f="xlsx">⇩ Excel</button><button class="um-btn ghost" data-a="exp" data-f="pdf">⇩ PDF</button>
+            <button class="um-btn ghost" data-a="import">⇧ Importar CSV</button><button class="um-btn" data-a="nuevo">+ Registrar colaborador</button>
+        </div>
+    </div>
+    <div class="us-stats" id="usStats"></div>
+    <article class="us-box">
+        <div class="us-tools">
+            <input type="search" id="usQ" placeholder="Buscar por nombre, cédula, usuario o correo…">
+            <select id="usRol"><option value="">Todos los roles</option><option value="admin">Administrador</option><option value="profesor">Profesor</option><option value="estudiante">Estudiante</option></select>
+            <select id="usDep"><option value="">Todos los departamentos</option></select>
+            <select id="usUb"><option value="">Todas las ubicaciones</option></select>
+            <select id="usEst"><option value="">Todos los estados</option><option value="1">Activos</option><option value="0">Suspendidos</option></select>
+        </div>
+        <div class="us-wrap"><table id="usTabla"><thead><tr><th>Nombre</th><th>Apellido</th><th>Cédula</th><th>Usuario</th><th>Departamento</th><th>Puesto</th><th>Ubicación</th><th>Regional</th><th>ID jefatura</th><th>Rol</th><th>Estado</th><th data-noexport>Acciones</th></tr></thead><tbody id="usBody"></tbody></table></div>
+        <div class="us-pag"><span id="usInfo" class="mut"></span><div id="usPags"></div></div>
+    </article>
+    <input type="file" id="usFile" accept=".csv,text/csv" hidden>
+</section>
+
+<script>
+(function () {
+    const UM = window.UM, U = window.UMUsers, $ = id => document.getElementById(id), esc = UM.esc, SIZE = 12;
+    const ROL = { admin: "ADMINISTRADOR", profesor: "PROFESOR", estudiante: "ESTUDIANTE" };
+    let page = 1;
+
+    const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const lista = () => { const q = norm($("usQ").value.trim()), r = $("usRol").value, d = $("usDep").value, u = $("usUb").value, e = $("usEst").value;
+        return U.list().filter(x => (!q || norm([x.nombre, x.apellido, x.cedula, x.usuario, x.correo].join(" ")).includes(q)) && (!r || x.rol === r) && (!d || x.departamento === d) && (!u || x.ubicacion === u) && (!e || String(+x.activo) === e)); };
+
+    function opciones() {
+        const l = U.list(), uniq = k => [...new Set(l.map(x => x[k]).filter(Boolean))].sort();
+        $("usDep").insertAdjacentHTML("beforeend", uniq("departamento").map(v => `<option>${esc(v)}</option>`).join(""));
+        $("usUb").insertAdjacentHTML("beforeend", uniq("ubicacion").map(v => `<option>${esc(v)}</option>`).join(""));
+    }
+    function stats() { const l = U.list();
+        $("usStats").innerHTML = [["Total de colaboradores", l.length, "Registrados"], ["Cuentas activas", l.filter(x => x.activo).length, "Con acceso"], ["Profesores", l.filter(x => x.rol === "profesor").length, "Docentes y facilitadores"],
+            ["Pueden subir material", l.filter(x => x.rol === "profesor" && x.permisoSubir).length, "Profesores con permiso"]].map(([a, b, c]) => `<article><span>${a}</span><h2>${b}</h2><small class="mut">${c}</small></article>`).join(""); }
+
+    function pintar() {
+        const l = lista(), pags = Math.max(1, Math.ceil(l.length / SIZE)); page = Math.min(page, pags); const ini = (page - 1) * SIZE;
+        $("usBody").innerHTML = l.slice(ini, ini + SIZE).map(x => `<tr><td>${esc(x.nombre)}</td><td>${esc(x.apellido)}</td><td>${esc(x.cedula)}</td><td>${esc(x.usuario)}</td><td>${esc(x.departamento)}</td><td>${esc(x.puesto)}</td>
+            <td>${esc(x.ubicacion)}</td><td>${esc(x.regional)}</td><td>${esc(x.idJefatura)}</td><td><span class="rol">${ROL[x.rol]}</span>${x.rol === "profesor" ? (x.permisoSubir ? " · puede subir" : " · sin permiso de subir") : ""}</td>
+            <td><span class="st ${x.activo ? "on" : "off"}">${x.activo ? "Activo" : "Suspendido"}</span></td>
+            <td data-noexport><button data-a="editar" data-id="${x.id}">Editar</button><button data-a="estado" data-id="${x.id}">${x.activo ? "Suspender" : "Activar"}</button>
+            ${x.rol === "profesor" ? `<button data-a="permiso" data-id="${x.id}">${x.permisoSubir ? "Quitar permiso" : "Dar permiso"}</button>` : ""}</td></tr>`).join("") || `<tr><td colspan="12" style="text-align:center;padding:26px" class="mut">No hay usuarios con esos filtros.</td></tr>`;
+        $("usInfo").textContent = l.length ? `Mostrando ${ini + 1}–${Math.min(ini + SIZE, l.length)} de ${l.length}` : "0 resultados";
+        const near = [...new Set([1, page - 1, page, page + 1, pags])].filter(p => p >= 1 && p <= pags).sort((a, b) => a - b);
+        $("usPags").innerHTML = `<button data-p="${page - 1}" ${page === 1 ? "disabled" : ""}>‹</button>` + near.map(p => `<button data-p="${p}" class="${p === page ? "on" : ""}">${p}</button>`).join("") + `<button data-p="${page + 1}" ${page === pags ? "disabled" : ""}>›</button>`;
+        stats();
+    }
+
+    function formulario(u) {
+        const v = k => esc((u && u[k]) || ""), nuevo = !u;
+        const campo = (k, l, tipo = "text") => `<div class="um-field"><label>${l}</label><input id="uf_${k}" type="${tipo}" value="${v(k)}"></div>`;
+        const m = UM.modal({ titulo: nuevo ? "Registrar colaborador" : "Editar colaborador", ancho: 640, html: `<div class="us-form">${campo("nombre", "Nombre *")}${campo("apellido", "Apellido *")}${campo("cedula", "Cédula *")}${campo("usuario", "Usuario Universidad Monge *")}
+            <div class="um-field"><label>Departamento</label><select id="uf_departamento">${Object.keys(U.DEPS).map(d => `<option ${u && u.departamento === d ? "selected" : ""}>${d}</option>`).join("")}</select></div>${campo("puesto", "Puesto")}
+            <div class="um-field"><label>Ubicación</label><select id="uf_ubicacion">${Object.keys(U.UBIC).map(d => `<option ${u && u.ubicacion === d ? "selected" : ""}>${d}</option>`).join("")}</select></div>${campo("idJefatura", "ID jefatura")}
+            ${campo("correo", "Correo", "email")}<div class="um-field"><label>País (administración)</label><select id="uf_pais">${(window.UM_PAISES || []).map(p => `<option value="${p.id}" ${(u ? u.pais : "NI") === p.id ? "selected" : ""}>${p.nombre}</option>`).join("")}</select></div><div class="um-field"><label>Rol</label><select id="uf_rol">${Object.entries(ROL).map(([k, t]) => `<option value="${k}" ${u && u.rol === k ? "selected" : ""}>${t[0] + t.slice(1).toLowerCase()}</option>`).join("")}</select></div></div>
+            <label class="us-chk"><input type="checkbox" id="uf_permisoSubir" ${u && u.permisoSubir ? "checked" : ""}> Si es profesor: permitir subir PDF, PPT y videos</label>
+            <p class="um-note"><button class="um-btn" id="ufOk">Guardar</button></p>` });
+        m.el.querySelector("#ufOk").addEventListener("click", () => {
+            const g = k => m.el.querySelector("#uf_" + k).value.trim(), d = { nombre: g("nombre"), apellido: g("apellido"), cedula: g("cedula"), usuario: g("usuario"), departamento: g("departamento"), puesto: g("puesto"),
+                ubicacion: g("ubicacion"), idJefatura: g("idJefatura"), correo: g("correo"), pais: g("pais"), rol: g("rol"), permisoSubir: m.el.querySelector("#uf_permisoSubir").checked };
+            if (!d.nombre || !d.apellido || !d.cedula || !d.usuario) { UM.toast("Completa nombre, apellido, cédula y usuario"); return; }
+            if (U.existeCedula(d.cedula, u && u.id)) { UM.toast("Ya existe un usuario con esa cédula"); return; }
+            d.regional = U.UBIC[d.ubicacion] || ""; d.correo = d.correo || d.usuario + "@grupomonge.com";
+            nuevo ? U.add(d) : U.update(u.id, d); m.cerrar(); UM.toast(nuevo ? "Colaborador registrado" : "Cambios guardados"); pintar();
+        });
+    }
+
+    $("usTabla").closest(".us").addEventListener("click", e => {
+        const b = e.target.closest("[data-a],[data-p]"); if (!b) return;
+        if (b.dataset.p) { page = +b.dataset.p; pintar(); return; }
+        const a = b.dataset.a, id = +b.dataset.id, u = id ? U.get(id) : null;
+        if (a === "nuevo") formulario(null); if (a === "editar") formulario(u);
+        if (a === "estado") { U.update(id, { activo: !u.activo }); UM.toast(u.activo ? "Usuario suspendido" : "Usuario activado"); pintar(); }
+        if (a === "permiso") { U.update(id, { permisoSubir: !u.permisoSubir }); UM.toast(!u.permisoSubir ? "Permiso concedido" : "Permiso retirado"); pintar(); }
+        if (a === "import") UM.modal({ titulo: "Importar colaboradores (CSV)", ancho: 520, html: `<p>Sube un archivo CSV con las columnas: nombre, apellido, cedula, departamento, puesto, ubicacion, id_jefatura, regional, usuario, rol.</p>
+            <p class="um-note"><button class="um-btn ghost" id="usPlant">⇩ Descargar plantilla</button> <button class="um-btn" id="usElegir">Elegir archivo CSV</button></p>` }).el.addEventListener("click", ev => {
+            if (ev.target.id === "usPlant") window.UMExport.download("plantilla_usuarios.csv", "text/csv;charset=utf-8", "\ufeff" + U.plantillaCSV());
+            if (ev.target.id === "usElegir") $("usFile").click(); });
+        if (a === "exp") { const mtx = window.UMExport.fromTable($("usTabla")); window.UMExport[b.dataset.f](mtx, "usuarios_umonge", { titulo: "Usuarios", hoja: "Usuarios" }); }
+    });
+    $("usFile").addEventListener("change", async e => { const f = e.target.files[0]; if (!f) return; const r = U.importarCSV(await f.text()); e.target.value = "";
+        document.querySelectorAll(".um-modal").forEach(m => m.remove()); UM.toast(`${r.ok} usuarios importados${r.dup ? " · " + r.dup + " omitidos por cédula repetida" : ""}`); pintar(); });
+    ["usQ", "usRol", "usDep", "usUb", "usEst"].forEach(i => $(i).addEventListener(i === "usQ" ? "input" : "change", () => { page = 1; pintar(); }));
+    opciones(); pintar();
+})();
+</script>

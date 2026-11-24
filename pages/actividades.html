@@ -1,0 +1,38 @@
+<style>
+.ac2-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 22px 0; }
+.ac2-stats article { padding: 18px; } .ac2-stats h2 { font-size: 28px; margin: 8px 0 4px; }
+.ac2-tools { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.ac2-tools select { padding: 10px 12px; border-radius: 8px; font: inherit; font-size: 12px; color: #f4f2f2; background: rgba(12,12,15,.75); border: 1px solid rgba(255,255,255,.16); }
+.ac2-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.ac2-card { padding: 18px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
+.ac2-card:hover { border-color: #ef2b2b !important; }
+.ac2-top { display: flex; justify-content: space-between; align-items: center; font-size: 10px; font-weight: 800; letter-spacing: .5px; }
+.ac2-card h3 { font-size: 14px; line-height: 1.4; } .ac2-card small { font-size: 11px; line-height: 1.5; }
+.ac2-st { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; background: rgba(255,255,255,.12); }
+.ac2-st.ok { background: rgba(50,190,110,.22); color: #7be2a8; } .ac2-st.pend { background: rgba(240,180,60,.2); color: #ffd27a; } .ac2-st.lock { background: rgba(239,43,43,.18); color: #ff8f8f; }
+.ac2-eyebrow { color: #EF2B2B; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.ac2-head h1 { font-size: 28px; margin: 8px 0 6px; }
+</style>
+<section>
+    <div class="ac2-head"><span class="ac2-eyebrow">CAMPUS NICARAGUA / FORMACIÓN</span><h1>Actividades</h1><p style="font-size:13px" class="mut">Lectura, confirmación y evaluación de cada curso, en el orden establecido.</p></div>
+    <div class="ac2-stats" id="a2Stats"></div>
+    <div class="ac2-tools"><select id="a2Est"><option value="">Todos los estados</option><option>Pendiente</option><option>Completada</option><option>No disponible</option></select>
+        <select id="a2Tipo"><option value="">Todos los tipos</option><option>Lectura</option><option>Confirmación</option><option>Evaluación</option></select></div>
+    <div class="ac2-grid" id="a2Grid"></div>
+</section>
+<script>
+(function () {
+    const UM = window.UM, D = window.UMData, $ = id => document.getElementById(id), esc = UM.esc;
+    const acts = D.misCursos().flatMap(c => { const p = D.pasos(c.id);
+        return [["Lectura", "Lectura de la política", p.lectura, true], ["Confirmación", "Confirmación de lectura", p.conf, p.lectura], ["Evaluación", "Evaluación", p.eval, p.conf]]
+            .map(([tipo, t, ok, disp]) => ({ c, tipo, t, est: ok ? "Completada" : disp ? "Pendiente" : "No disponible" })); });
+    const n = e => acts.filter(a => a.est === e).length;
+    $("a2Stats").innerHTML = [["Actividades", acts.length, "En mis cursos"], ["Pendientes", n("Pendiente"), "Disponibles para hacer"], ["Completadas", n("Completada"), "Realizadas"], ["No disponibles", n("No disponible"), "Requieren el paso anterior"]]
+        .map(([a, b, c]) => `<article><span>${a}</span><h2>${b}</h2><small class="mut">${c}</small></article>`).join("");
+    function pintar() { const e = $("a2Est").value, t = $("a2Tipo").value, l = acts.filter(a => (!e || a.est === e) && (!t || a.tipo === t));
+        $("a2Grid").innerHTML = l.map(a => `<article class="ac2-card" data-id="${a.c.id}"><div class="ac2-top"><span class="mut">${a.tipo.toUpperCase()}</span><span class="ac2-st ${a.est === "Completada" ? "ok" : a.est === "Pendiente" ? "pend" : "lock"}">${a.est}</span></div>
+            <h3>${esc(a.t)}: ${esc(a.c.titulo)}</h3><small class="mut">${esc(a.c.categoria)} · ${esc(a.c.subcategoria)}</small></article>`).join("") || '<article class="mut" style="padding:26px;text-align:center">No hay actividades con esos filtros.</article>'; }
+    $("a2Grid").addEventListener("click", e => { const c = e.target.closest("[data-id]"); if (c) UM.open("curso", { id: +c.dataset.id }); });
+    ["a2Est", "a2Tipo"].forEach(i => $(i).addEventListener("change", pintar)); pintar();
+})();
+</script>
